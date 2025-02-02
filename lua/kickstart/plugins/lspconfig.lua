@@ -151,14 +151,14 @@ return {
       })
 
       -- Change diagnostic symbols in the sign column (gutter)
-      -- if vim.g.have_nerd_font then
-      --   local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
-      --   local diagnostic_signs = {}
-      --   for type, icon in pairs(signs) do
-      --     diagnostic_signs[vim.diagnostic.severity[type]] = icon
-      --   end
-      --   vim.diagnostic.config { signs = { text = diagnostic_signs } }
-      -- end
+      if vim.g.have_nerd_font then
+        local signs = { ERROR = '', WARN = '', INFO = '', HINT = '' }
+        local diagnostic_signs = {}
+        for type, icon in pairs(signs) do
+          diagnostic_signs[vim.diagnostic.severity[type]] = icon
+        end
+        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+      end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
@@ -180,16 +180,52 @@ return {
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
-        -- rust_analyzer = {},
+        --
+        -- Ansible
+        ansiblels = {},
+        --
+        -- Terraform
+        terraformls = {},
+        --
+        -- Rust
+        rust_analyzer = {},
+        --
+        -- TOML
+        taplo = {},
+        --
+        -- Python
+        pyright = {},
+        --
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
+        -- TypeScript
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
+        ts_ls = {},
+        eslint = {},
         --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        -- CSS
+        cssls = {},
+        tailwindcss = {
+          filetypes_exclude = { 'markdown' },
+        },
         --
-
+        -- C#
+        csharp_ls = {},
+        --
+        -- HTML
+        html = {},
+        -- Docker
+        docker_compose_language_service = {},
+        dockerls = {},
+        --
+        -- JSON
+        jsonls = {},
+        --
+        -- YAML
+        yamlls = {},
+        --
+        -- Lua
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -222,10 +258,13 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ansible-lint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+        -- ensure_installed = vim.tbl_keys(servers or {}),
+        -- automatic_installation = true,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}

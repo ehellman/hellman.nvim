@@ -4,6 +4,23 @@ return {
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
     main = 'ibl',
-    opts = {},
+    opts = {
+      enabled = false,
+      indent = {
+        char = '┊',
+        -- highlight = {
+        --   'RainbowRed',
+        --   'RainbowYellow',
+        --   'RainbowBlue',
+        --   'RainbowOrange',
+        --   'RainbowGreen',
+        --   'RainbowViolet',
+        --   'RainbowCyan',
+        -- },
+      },
+    },
+    config = function(_, opts)
+      require('ibl').setup(opts)
+    end,
   },
 }

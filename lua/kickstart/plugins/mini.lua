@@ -32,6 +32,23 @@ return {
         return '%2l:%-2v'
       end
 
+      -- Animated indentation indicator for scopes
+      --
+      require('mini.indentscope').setup {
+        symbol = '│',
+        options = {
+          try_as_border = true,
+        },
+      }
+
+      -- Disable mini.indentscope in specific contexts
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'help', 'alpha', 'dashboard', 'NvimTree', 'Trouble', 'lazy', 'mason' },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,

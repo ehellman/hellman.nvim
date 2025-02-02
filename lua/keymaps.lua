@@ -17,10 +17,10 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -44,5 +44,31 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- [[ Hellman Keybinds Cheatsheet ]]
+
+--[[
+
+ Mode  | Shortcode | Description
+ ------|----------|--------------------------------
+ `n`   | Normal   | Default mode for navigation & commands
+ `v`   | Visual   | Selecting text
+ `x`   | Visual   | Like `v` but excludes Select mode
+ `s`   | Select   | Like Visual but replaces text immediately
+ `i`   | Insert   | Typing text
+ `c`   | Command  | For `:` commands (e.g., `:w`, `:q`)
+ `o`   | Operator | Used after `d`, `c`, `y` before a motion
+ `t`   | Terminal | Used inside `:terminal`
+
+]]
+--
+
+-- [[ Hellman Keybinds ]]
+
+-- Don't yank on delete char
+vim.keymap.set('n', 'x', '"_x', { silent = true })
+vim.keymap.set('n', 'X', '"_X', { silent = true })
+vim.keymap.set('v', 'x', '"_x', { silent = true })
+vim.keymap.set('v', 'X', '"_X', { silent = true })
 
 -- vim: ts=2 sts=2 sw=2 et

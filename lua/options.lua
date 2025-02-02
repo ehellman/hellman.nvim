@@ -5,6 +5,9 @@
 
 -- Make line numbers default
 vim.opt.number = true
+-- Set line number width
+vim.opt.numberwidth = 6
+
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
@@ -25,6 +28,12 @@ end)
 
 -- Enable break indent
 vim.opt.breakindent = true
+
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.smartindent = true
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
 
 -- Save undo history
 vim.opt.undofile = true
@@ -57,8 +66,22 @@ vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
+vim.opt.cursorlineopt = 'number'
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
+
+-- add binaries installed by mason.nvim to path
+local is_windows = vim.fn.has 'win32' ~= 0
+local sep = is_windows and '\\' or '/'
+local delim = is_windows and ';' or ':'
+vim.env.PATH = table.concat({ vim.fn.stdpath 'data', 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
+
+-- Set terminal on Windows
+-- if vim.fn.has("win32") == 1 then
+--   LazyVim.terminal.setup("pwsh")
+-- end
+
+vim.g.deprecation_warnings = true
 
 -- vim: ts=2 sts=2 sw=2 et

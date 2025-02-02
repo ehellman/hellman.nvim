@@ -34,6 +34,9 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      -- Tailwind
+      'tailwind-tools',
+      'onsails/lspkind-nvim',
     },
     config = function()
       -- See `:help cmp`
@@ -48,6 +51,48 @@ return {
           end,
         },
         completion = { completeopt = 'menu,menuone,noinsert' },
+
+        window = {
+          performance = {
+            debounce = 500,
+            throttle = 550,
+            fetching_timeout = 80,
+          },
+          completion = {
+            -- border = { '', '', '', '', '', '', '', '' },
+            -- border = { '┏', '━', '┓', '┃', '┛', '━', '┗', '┃' },
+            border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+            winhighlight = 'Normal:CmpNormal,FloatBorder:CmpBorder,FloatTitle:CmpBorderTitle,CursorLine:CmpSelect',
+            side_padding = 1,
+            keyword_length = 3,
+          },
+          documentation = {
+            border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+            winhighlight = 'Normal:CmpDocNormal,FloatBorder:CmpDocBorder',
+          },
+        },
+
+        formatting = {
+          fields = { 'abbr', 'menu', 'kind' },
+          expandable_indicator = true,
+          max_width = 25,
+          ellipsis_char = '...',
+          format = require('lspkind').cmp_format {
+            -- mode = 'symbol_text',
+            -- mode = 'symbol',
+            before = require('tailwind-tools.cmp').lspkind_format,
+            -- menu = {
+            --   buffer = '[ buf]',
+            --   cmp_git = '[ git]',
+            --   cody = '[cody]',
+            --   nvim_lsp = '[ lsp]',
+            --   nvim_lua = '[nvim]',
+            --   path = '[path]',
+            --   shell = '[ sh]',
+            -- },
+            --
+          },
+        },
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
@@ -66,7 +111,7 @@ return {
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
