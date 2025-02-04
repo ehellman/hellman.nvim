@@ -6,10 +6,10 @@ return {
     name = 'catppuccin',
     priority = 1000,
     init = function()
-      vim.cmd.colorscheme 'catppuccin'
+      vim.cmd.colorscheme('catppuccin')
     end,
     opts = {
-      compile_path = vim.fn.stdpath 'cache' .. '/nvim/catppuccin',
+      compile_path = vim.fn.stdpath('cache') .. '/nvim/catppuccin',
       flavour = 'mocha',
       no_italic = 'true',
       term_colors = false,
@@ -89,7 +89,7 @@ return {
         harpoon = true,
         neotree = true,
         which_key = true,
-        -- blink_cmp = true,
+        blink_cmp = true,
       },
     },
   },
