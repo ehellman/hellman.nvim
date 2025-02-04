@@ -104,7 +104,9 @@ require 'options'
 require 'keymaps'
 
 -- [[ Filetypes ]]
-require 'custom.filetypes'
+require 'filetypes'
+
+require 'config.autocmds'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 require 'lazy-bootstrap'
