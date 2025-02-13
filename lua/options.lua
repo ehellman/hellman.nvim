@@ -1,87 +1,110 @@
--- [[ Setting options ]]
 -- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
+-- For more options, you can see `:help option-list`
 
--- Make line numbers default
-vim.opt.number = true
--- Set line number width
-vim.opt.numberwidth = 6
+-- [[ Global Variables ]]
+---@type {
+---  enable_statusline: boolean,
+---  enable_snacks_picker: boolean,
+---  enable_snacks_animate: boolean,
+---  cmp_variant: "blink" | "cmp",
+---  other_setting: string,
+---}
+vim.g = vim.g or {}
+vim.g.enable_statusline = true
+vim.g.enable_snacks_picker = true
+vim.g.enable_snacks_animate = true
 
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
+vim.g.cmp_variant = 'blink'
+-- vim.g.deprecation_warnings = true
 
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+local opt = vim.opt
 
--- Don't show the mode, since it's already in the status line
-vim.opt.showmode = false
+-- [[ OS Specific ]]
+local is_windows = vim.fn.has('win32') ~= 0
+vim.g.path_separator = is_windows and '\\' or '/'
+vim.g.delimiter = is_windows and ';' or ':'
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
+-- [[ Editor Visual Options ]]
+-- Basic editor visual configurations for a clean, informative interface
+opt.number = true -- Show line numbers
+opt.relativenumber = true -- Show relative line numbers for easy jumping
+opt.signcolumn = 'yes' -- Always show the signcolumn
+opt.cursorline = true -- Highlight current line
+opt.cursorlineopt = 'number'
+opt.showmode = true
+opt.termguicolors = true -- Enable true color support
+opt.wrap = false -- Disable line wrapping
+
+-- Configure whitespace visualization
+opt.list = true
+opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+-- [[ Scrolling and View Options ]]
+opt.scrolloff = 20 -- Keep 10 lines visible above/below cursor
+opt.sidescrolloff = 8 -- Keep 8 columns visible left/right of cursor
+opt.splitright = true -- Open vertical splits to the right
+opt.splitbelow = true -- Open horizontal splits below
+opt.virtualedit = 'block' -- Allow cursor movement in block selection where there's no text
+
+-- [[ Indentation and Formatting ]]
+-- Configure tabs, spaces, and auto-indentation behavior
+vim.o.expandtab = true -- Use spaces instead of tabs
+vim.o.shiftwidth = 2 -- Size of indent
+vim.o.smartindent = true -- Smart autoindenting
+vim.o.tabstop = 2 -- Number of spaces tabs count for
+vim.o.softtabstop = 2 -- Number of spaces for soft tabs
+opt.formatoptions = 'jcroqlnt' -- Format options (see :help fo-table)
+opt.breakindent = true -- Wrapped lines preserve indentation
+
+-- [[ Search and Replace ]]
+-- Settings for search behavior and text replacement
+opt.ignorecase = true -- Ignore case in search patterns
+opt.smartcase = true -- Override ignorecase if search contains capitals
+opt.inccommand = 'split' -- Live preview of substitutions
+opt.grepformat = '%f:%l:%c:%m'
+opt.grepprg = 'rg --vimgrep'
+
+-- [[ Completion and Command Line ]]
+opt.wildmode = 'longest:full,full' -- Command-line completion mode
+opt.completeopt = 'menu,menuone,noselect'
+opt.confirm = true -- Confirm to save changes before exiting modified buffer
+
+-- [[ Performance and Timing ]]
+opt.updatetime = 250 -- Decrease update time
+opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Key sequence wait time
+
+-- [[ File and Buffer Management ]]
+opt.undofile = true -- Save undo history
+opt.jumpoptions = 'view'
+
+-- [[ Mouse and Clipboard ]]
+opt.mouse = 'a' -- Enable mouse mode
+
+-- Handle clipboard integration with special consideration for SSH
 vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
+  opt.clipboard = vim.env.SSH_TTY and '' or 'unnamedplus'
 end)
 
--- Enable break indent
-vim.opt.breakindent = true
+-- [[ Folding Configuration ]]
+-- Comprehensive folding setup using treesitter
+vim.opt.fillchars = {
+  foldopen = '',
+  foldclose = '',
+  fold = ' ',
+  foldsep = ' ',
+  diff = '╱',
+  eob = ' ',
+}
 
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.smartindent = true
-vim.o.tabstop = 2
-vim.o.softtabstop = 2
+opt.statuscolumn = [[%!v:lua.require'snacks.statuscolumn'.get()]]
+opt.foldcolumn = '1'
+opt.foldlevel = 99
+opt.foldtext = ''
+opt.foldmethod = 'expr'
+opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
--- Save undo history
-vim.opt.undofile = true
-
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
-
--- Decrease update time
-vim.opt.updatetime = 250
-
--- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
-
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
-
--- Show which line your cursor is on
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = 'number'
-
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
-
--- add binaries installed by mason.nvim to path
-local is_windows = vim.fn.has('win32') ~= 0
-local sep = is_windows and '\\' or '/'
-local delim = is_windows and ';' or ':'
-vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, sep) .. delim .. vim.env.PATH
-
--- Set terminal on Windows
--- if vim.fn.has("win32") == 1 then
---   LazyVim.terminal.setup("pwsh")
--- end
-
-vim.g.deprecation_warnings = true
+-- [[ Path and Environment Setup ]]
+-- Configure path for mason.nvim binaries
+vim.env.PATH = table.concat({ vim.fn.stdpath('data'), 'mason', 'bin' }, vim.g.path_separator) .. vim.g.delimiter .. vim.env.PATH
 
 -- vim: ts=2 sts=2 sw=2 et

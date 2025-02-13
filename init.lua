@@ -98,26 +98,26 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
-require 'options'
+require('options')
 
 -- [[ Basic Keymaps ]]
-require 'keymaps'
+require('keymaps')
 
 -- [[ Filetypes ]]
-require 'filetypes'
+require('filetypes')
 
-require 'config.autocmds'
+require('config.autocmds')
 
 -- [[ Install `lazy.nvim` plugin manager ]]
-require 'lazy-bootstrap'
+require('lazy-bootstrap')
 
 -- [[ Configure and install plugins ]]
-require('lazy-plugins').load {
+require('lazy-plugins').load({
   profiling = {
     loader = false,
     require = false,
   },
-}
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

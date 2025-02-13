@@ -34,6 +34,34 @@ vim.api.nvim_create_autocmd({ 'VimResized' }, {
   end,
 })
 
+-- make it easier to close man-files when opened inline
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('man_unlisted', { clear = true }),
+  pattern = { 'man' },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+  end,
+})
+
+-- wrap and check for spell in text filetypes
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('wrap_spell', { clear = true }),
+  pattern = { 'text', 'plaintex', 'typst', 'gitcommit', 'markdown' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})
+
+-- Fix conceallevel for json files
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  group = vim.api.nvim_create_augroup('json_conceal', { clear = true }),
+  pattern = { 'json', 'jsonc', 'json5' },
+  callback = function()
+    vim.opt_local.conceallevel = 0
+  end,
+})
+
 -- go to last loc when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = vim.api.nvim_create_augroup('last_loc', { clear = true }),
@@ -76,6 +104,7 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.bo[event.buf].buflisted = false
     vim.schedule(function()
       vim.keymap.set('n', 'q', function()
+        vim.notify('Trying to quit buffer', vim.log.levels.INFO)
         vim.cmd('close')
         pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
       end, {
@@ -84,5 +113,38 @@ vim.api.nvim_create_autocmd('FileType', {
         desc = 'Quit buffer',
       })
     end)
+  end,
+})
+
+-- local function is_kitty()
+--   local kitty_id = os.getenv('KITTY_WINDOW_ID')
+--   return kitty_id ~= nil and kitty_id ~= ''
+-- end
+
+vim.api.nvim_create_autocmd({ 'UIEnter', 'VimEnter' }, {
+  group = vim.api.nvim_create_augroup('kitty_padding', { clear = true }),
+  pattern = { '*' },
+  callback = function()
+    local sock = os.getenv('KITTY_LISTEN_ON')
+    if sock == nil then
+      error('KITTY_LISTEN_ON not specified')
+      return
+    end
+    os.execute('kitty @ --to ' .. sock .. ' set-spacing padding=0')
+    -- os.execute('kitty @ set-spacing padding=0')
+  end,
+})
+
+vim.api.nvim_create_autocmd('UILeave', {
+  group = vim.api.nvim_create_augroup('kitty_padding', { clear = true }),
+  pattern = { '*' },
+  callback = function()
+    local sock = os.getenv('KITTY_LISTEN_ON')
+    if sock == nil then
+      error('KITTY_LISTEN_ON not specified')
+      return
+    end
+    os.execute('kitty @ --to ' .. sock .. ' set-spacing padding=default')
+    -- os.execute('kitty @ set-spacing padding=default')
   end,
 })

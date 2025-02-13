@@ -18,7 +18,7 @@ return {
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
       -- classic | modern | helix
-      preset = 'modern',
+      preset = 'helix',
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen
       delay = 0,
@@ -61,16 +61,38 @@ return {
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-        { '<leader>d', group = '[D]ocument' },
-        { '<leader>r', group = '[R]ename' },
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>p', group = '[P]lugins' },
-        { '<leader>w', group = '[W]orkspace' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>tt', group = '[T]ailwind' },
+        { '<leader>c', group = '[c]ode', mode = { 'n', 'x' } },
+        { '<leader>cs', group = 'code [s]ymbols' },
+        { '<leader>ct', group = '[t]ailwind' },
+        { '<leader>d', group = '[d]ocument' },
+        { '<leader>s', group = '[s]earch' },
+        { '<leader>g', group = '[g]it' },
+        { '<leader>p', group = '[p]lugins' },
+        { '<leader>u', group = '[u]i' },
+        { '<leader>w', group = '[w]orkspace' },
+        { '<leader>t', group = '[t]est' },
         { '<leader>H', group = 'Git [H]unk', mode = { 'n', 'v' } },
-        { '<leader>h', group = '[H]arpoon' },
+        { '<leader>h', group = '[h]arpoon' },
+        {
+          '<leader>b',
+          group = '[b]uffer',
+          expand = function()
+            return require('which-key.extras').expand.buf()
+          end,
+        },
+        { '[', group = 'prev' },
+        { ']', group = 'next' },
+        { 'g', group = 'goto' },
+        { 'z', group = 'fold' },
+      },
+    },
+    keys = {
+      {
+        '<leader>?',
+        function()
+          require('which-key').show({ global = false })
+        end,
+        desc = 'Buffer Keymaps (which-key)',
       },
     },
   },
