@@ -1,12 +1,14 @@
+---@type LazySpec
 return {
-  'nvim-lualine/lualine.nvim',
-  event = {
-    'BufReadPost',
-    'BufNewFile',
-    'BufWritePre',
-  },
+  "nvim-lualine/lualine.nvim",
+  -- event = {
+  --   'BufReadPost',
+  --   'BufNewFile',
+  --   'BufWritePre',
+  -- },
+  event = "VeryLazy",
   dependencies = {
-    'nvim-tree/nvim-web-devicons',
+    "nvim-tree/nvim-web-devicons",
   },
   config = function()
     -- local harpoon_comp = function()
@@ -47,15 +49,15 @@ return {
     --   return table.concat(status, options.separator)
     -- end
 
-    require('lualine').setup({
-      theme = 'catppuccin',
+    require("lualine").setup({
+      theme = "catppuccin",
       sections = {
         lualine_a = {
           {
-            'mode',
+            "mode",
           },
         },
-        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_b = { "branch", "diff", "diagnostics" },
         lualine_c = {
           -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
           -- {
@@ -90,16 +92,17 @@ return {
           },
         },
         lualine_y = {
-          { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
-          { 'location', padding = { left = 0, right = 1 } },
+          { "progress", separator = " ", padding = { left = 1, right = 0 } },
+          { "location", padding = { left = 0, right = 1 } },
+          { "filetype", padding = { left = 1, right = 1 } },
         },
-        lualine_z = { 'hostname' },
+        lualine_z = { "hostname" },
       },
-      extensions = { 'neo-tree', 'lazy', 'fzf' },
+      extensions = { "neo-tree", "lazy", "fzf" },
       options = {
-        disabled_filetypes = { statusline = { 'dashboard', 'alpha', 'ministarter', 'snacks_dashboard' } },
-        section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' },
+        disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
+        section_separators = { left = "", right = "" },
+        component_separators = { left = "", right = "" },
         -- component_separators = { left = '', right = '' },
         -- section_separators = { left = '', right = '' },
       },

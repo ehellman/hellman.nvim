@@ -1,13 +1,15 @@
+---@type LazySpec
 return {
   {
     -- Simple and easy statusline.
     'echasnovski/mini.statusline',
     enabled = false,
-    event = {
-      'BufReadPost',
-      'BufNewFile',
-      'BufWritePre',
-    },
+    event = 'VeryLazy',
+    -- event = {
+    --   'BufReadPost',
+    --   'BufNewFile',
+    --   'BufWritePre',
+    -- },
     config = function()
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin

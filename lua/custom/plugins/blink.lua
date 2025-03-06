@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     'saghen/blink.cmp',
@@ -12,6 +13,7 @@ return {
       -- },
       'onsails/lspkind.nvim',
     },
+    enabled = vim.g.cmp_variant == 'blink',
     event = 'InsertEnter',
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config

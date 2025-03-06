@@ -1,10 +1,11 @@
+---@type LazySpec
 return {
   ---@module 'noice'
-  'folke/noice.nvim',
-  event = 'VeryLazy',
+  "folke/noice.nvim",
+  event = "VeryLazy",
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-    'MunifTanjim/nui.nvim',
+    "MunifTanjim/nui.nvim",
     -- OPTIONAL:
     --   `nvim-notify` is only needed, if you want to use the notification view.
     --   If not available, we use `mini` as the fallback
@@ -12,10 +13,10 @@ return {
   },
   cmdline = {
     -- enabled = true, -- enables the Noice cmdline UI
-    view = 'cmdline_popup', -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
+    view = "cmdline_popup", -- view for rendering the cmdline. Change to `cmdline` to get a classic cmdline at the bottom
     opts = {
       enter = true, -- automatically enter the cmdline when it opens
-      format = 'details', -- format for the cmdline. See section on formatting
+      format = "details", -- format for the cmdline. See section on formatting
       -- border = 'rounded', -- border style for the cmdline
       -- borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' }, -- border characters for the cmdline
       -- win_options = { winblend = 10, winhighlight = 'NormalFloat:NormalFloat,FloatBorder:FloatBorder' },
@@ -169,8 +170,8 @@ return {
   ---@type NoiceRouteConfig[]
   routes = {
     {
-      view = 'notify',
-      filter = { event = 'msg_showmode' },
+      view = "notify",
+      filter = { event = "msg_showmode" },
     },
   }, --- @see section on routes
   ------@type table<string, NoiceFilter>
@@ -192,16 +193,16 @@ return {
   config = function(_, opts)
     opts.routes = {
       {
-        view = 'notify',
-        filter = { event = 'msg_showmode' },
+        view = "notify",
+        filter = { event = "msg_showmode" },
       },
     }
     -- HACK: noice shows messages from before it was enabled,
     -- but this is not ideal when Lazy is installing plugins,
     -- so clear the messages in this case.
-    if vim.o.filetype == 'lazy' then
+    if vim.o.filetype == "lazy" then
       vim.cmd([[messages clear]])
     end
-    require('noice').setup(opts)
+    require("noice").setup(opts)
   end,
 }

@@ -1,8 +1,8 @@
+---@type LazySpec
 return {
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
-    optional = true,
     enabled = vim.g.cmp_variant == 'cmp',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
@@ -36,17 +36,18 @@ return {
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
       -- Tailwind
-      'tailwind-tools',
-      'onsails/lspkind-nvim',
+      -- 'tailwind-tools',
+      -- 'onsails/lspkind-nvim',
     },
-    config = function()
+    ---@param opts cmp.ConfigSchema
+    config = function(_, opts)
       -- See `:help cmp`
       local cmp = require('cmp')
-      local luasnip = require('luasnip')
-      luasnip.config.setup({})
+      local luasnip = require('luasnip').config.setup({})
 
-      cmp.setup({
+      cmp.setup(vim.tbl_deep_extend('force', opts or {}, {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -82,7 +83,7 @@ return {
           format = require('lspkind').cmp_format({
             -- mode = 'symbol_text',
             -- mode = 'symbol',
-            before = require('tailwind-tools.cmp').lspkind_format,
+            -- before = require('tailwind-tools.cmp').lspkind_format,
             -- menu = {
             --   buffer = '[ buf]',
             --   cmp_git = '[ git]',
@@ -157,9 +158,9 @@ return {
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          { name = 'nvim_lsp_signature_help' },
         },
-      })
+      }))
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et

@@ -1,82 +1,97 @@
-return {
-  'ThePrimeagen/harpoon',
-  branch = 'harpoon2',
-  dependencies = { 'nvim-lua/plenary.nvim' },
-  -- init = function()
-  --   vim.api.nvim_create_autocmd('BufEnter', {
-  --     pattern = '*',
-  --     callback = function()
-  --       vim.notify(vim.opt.number, 'info')
-  --       -- Ensure line numbers are enabled
-  --       -- vim.wo.number = true
-  --     end,
-  --   })
-  -- end,
-  opts = {
-    menu = {
-      -- width = vim.api.nvim_win_get_width(0) - 4,
-      width = 80,
+local function generate_harpoon_picker()
+  local file_paths = {}
+  for _, item in ipairs(require("harpoon"):list().items) do
+    table.insert(file_paths, {
+      text = item.value,
+      file = item.value,
+    })
+  end
+  return file_paths
+end
+
+-- dynamically set up 1-5 keys for harpoon, without loading harpoon
+local wk = require("which-key")
+
+for i = 1, 5 do
+  wk.add({
+    {
+      string.format("<leader>%d", i),
+      function()
+        require("harpoon"):list():select(i)
+      end,
+      desc = string.format("jump to harpooned [%d]", i),
     },
-    settings = {
-      save_on_toggle = true,
+  })
+end
+
+---@module 'lazy'
+---@type LazySpec
+return {
+  {
+    ---@module 'harpoon'
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    version = false,
+    dependencies = { "nvim-lua/plenary.nvim", "folke/which-key.nvim" },
+    opts = {
+      menu = {
+        width = vim.api.nvim_win_get_width(0) - 4,
+      },
+      settings = {
+        save_on_toggle = true,
+      },
+    },
+    config = function(_, opts)
+      local harpoon = require("harpoon")
+      harpoon:setup(opts)
+    end,
+  },
+  {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+
+        -- {
+        --   "<leader>h",
+        --   group = "[h]arpoon",
+        -- },
+        {
+          "<leader>h",
+          function()
+            vim.notify("harpooned file", vim.log.levels.INFO, { title = "harpoon" })
+            require("harpoon"):list():add()
+          end,
+          desc = "[h]arpoon file",
+        },
+        {
+          "<leader>hh",
+          function()
+            require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+          end,
+          desc = "show [h]arpooned files",
+        },
+        {
+          "<leader>hj",
+          function()
+            require("harpoon"):list():next()
+          end,
+          desc = "[n]ext file",
+        },
+        {
+          "<leader>hk",
+          function()
+            require("harpoon"):list():prev()
+          end,
+          desc = "jump to [p]revious file",
+        },
+        {
+          "<leader>hr",
+          function()
+            require("harpoon"):list():clear()
+          end,
+          desc = "[r]eset harpoon marks",
+        },
+      },
     },
   },
-  config = function(_, opts)
-    local harpoon = require('harpoon')
-    harpoon.setup(opts)
-    vim.api.nvim_create_autocmd('BufEnter', {
-      pattern = '*',
-      callback = function()
-        local line_number_enabled = vim.wo.number -- Get the current line number setting
-        vim.notify('Line numbers: ' .. tostring(line_number_enabled), vim.log.levels.INFO)
-        -- Ensure line numbers are enabled
-        -- vim.wo.number = true
-      end,
-    })
-  end,
-  keys = function()
-    local harpoon = require('harpoon')
-
-    local keys = {
-      {
-        '<leader>ha',
-        function()
-          vim.notify('Harpooned', 'info')
-          harpoon:list():add()
-        end,
-        desc = 'Add file to [H]arpoon',
-      },
-      {
-        '<leader>hh',
-        function()
-          harpoon.ui:toggle_quick_menu(harpoon:list())
-        end,
-        desc = 'Show [H]arpoon list',
-      },
-      {
-        '<leader>hj',
-        function()
-          harpoon:list():next()
-        end,
-        desc = 'Jump to [n]ext file',
-      },
-      {
-        '<leader>hk',
-        function()
-          harpoon:list():prev()
-        end,
-        desc = 'Jump to [p]revious file',
-      },
-    }
-    for i = 1, 5 do
-      table.insert(keys, {
-        string.format('<leader>%d', i),
-        function()
-          harpoon:list():select(i)
-        end,
-        desc = string.format('Jump to Harpooned file [%d]', i),
-      })
-    end
-    return keys
-  end,
 }
