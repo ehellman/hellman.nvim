@@ -17,12 +17,18 @@ vim.g.enable_snacks_animate = true
 vim.g.cmp_variant = "cmp"
 -- vim.g.deprecation_warnings = true
 
-local opt = vim.opt
+-- copilot suggestions in cmp
+vim.g.ai_cmp = true
 
 -- [[ OS Specific ]]
-local is_windows = vim.fn.has("win32") ~= 0
-vim.g.path_separator = is_windows and "\\" or "/"
-vim.g.delimiter = is_windows and ";" or ":"
+vim.g.path_separator = HellVim.is_windows() and "\\" or "/"
+vim.g.delimiter = HellVim.is_windows() and ";" or ":"
+
+-- [[ Chezmoi ]]
+vim.g["chezmoi#use_tmp_buffer"] = 1
+-- vim.g["chezmoi#source_dir_path"] = os.getenv("HOME") .. "/.local/share/chezmoi"
+
+local opt = vim.opt
 
 -- [[ Editor Visual Options ]]
 -- Basic editor visual configurations for a clean, informative interface

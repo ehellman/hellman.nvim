@@ -1,34 +1,34 @@
 ---@type LazySpec
 return {
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        'cssls',
-        'cssmodules_ls',
-        'tailwindcss',
+        "cssls",
+        "cssmodules_ls",
+        "tailwindcss",
       },
     },
   },
   {
-    'luckasRanarison/tailwind-tools.nvim',
-    name = 'tailwind-tools',
+    "luckasRanarison/tailwind-tools.nvim",
+    name = "tailwind-tools",
     lazy = true,
-    event = 'BufRead',
-    build = ':UpdateRemotePlugins',
+    -- event = "BufRead",
+    build = ":UpdateRemotePlugins",
     dependencies = {
-      'nvim-treesitter/nvim-treesitter',
+      "nvim-treesitter/nvim-treesitter",
       -- 'nvim-telescope/telescope.nvim', -- optional
-      'neovim/nvim-lspconfig', -- optional
+      "neovim/nvim-lspconfig", -- optional
     },
     ft = {
-      'javascript',
-      'javascriptreact',
-      'typescript',
-      'typescriptreact',
-      'css',
-      'scss',
-      'html',
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "css",
+      "scss",
+      "html",
     },
     -- enabled = function()
     --   -- disable on dashboard and prompt
@@ -50,7 +50,7 @@ return {
     opts = {
       server = {
         settings = {
-          classAttributes = { 'class', 'class.*', '.*Class.*', '.*Class', '.*Style.*' },
+          classAttributes = { "class", "class.*", ".*Class.*", ".*Class", ".*Style.*" },
           emmetCompletions = true,
           -- experimental = {
           --   classRegex = {
@@ -60,44 +60,44 @@ return {
           --   },
           -- },
           lint = {
-            cssConflict = 'error',
+            cssConflict = "error",
           },
         },
       },
       extension = {
         patterns = {
-          typescriptreact = { 'cn%(([^)]+)%)', 'clsx%(([^)]+)%)', 'cva%({["^"]}%)', 'tw%(([^)]+)%)', 'tw%`([^`]+)%`' },
-          typescript = { 'clsx%(([^)]+)%)', 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
-          tsx = { 'clsx%(([^)]+)%)', 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
+          typescriptreact = { "cn%(([^)]+)%)", "clsx%(([^)]+)%)", 'cva%({["^"]}%)', "tw%(([^)]+)%)", "tw%`([^`]+)%`" },
+          typescript = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
+          tsx = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
         },
       },
       cmp = {
-        highlight = 'foreground', -- color preview style, "foreground" | "background"
+        highlight = "foreground", -- color preview style, "foreground" | "background"
       },
     },
     config = function(_, opts)
-      require('tailwind-tools').setup(opts)
+      require("tailwind-tools").setup(opts)
     end,
     keys = {
-      { '<leader>ctc', '<cmd>TailwindConcealToggle<CR>', desc = 'Toggle tailwind conceal' },
-      { '<leader>cts', '<cmd>TailwindSort<CR>', desc = 'Sort tailwind classes' },
-      { '<leader>ctp', '<cmd>TailwindPrevClass<CR>', desc = 'Move to the next class' },
-      { '<leader>ctn', '<cmd>TailwindNextClass<CR>', desc = 'Move to the previous class' },
+      { "<leader>ctc", "<cmd>TailwindConcealToggle<CR>", desc = "Toggle tailwind conceal" },
+      { "<leader>cts", "<cmd>TailwindSort<CR>", desc = "Sort tailwind classes" },
+      { "<leader>ctp", "<cmd>TailwindPrevClass<CR>", desc = "Move to the next class" },
+      { "<leader>ctn", "<cmd>TailwindNextClass<CR>", desc = "Move to the previous class" },
     },
   },
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     opts = {
       servers = {
         tailwindcss = {
           filetypes_include = {},
-          filetypes_exclude = { 'markdown' },
+          filetypes_exclude = { "markdown" },
         },
       },
     },
     setup = {
       tailwindcss = function(_, opts)
-        local tw = require('lspconfig.configs.tailwindcss')
+        local tw = require("lspconfig.configs.tailwindcss")
 
         -- Add default filetypes
         vim.list_extend(opts.filetypes, tw.default_config.filetypes)
@@ -111,21 +111,21 @@ return {
     },
   },
   {
-    'hrsh7th/nvim-cmp',
+    "hrsh7th/nvim-cmp",
     optional = true,
     dependencies = {
       -- 'hrsh7th/cmp-nvim-lsp',
       -- 'hrsh7th/cmp-path',
       -- 'hrsh7th/cmp-nvim-lsp-signature-help',
-      'tailwind-tools',
-      'onsails/lspkind-nvim',
+      "tailwind-tools",
+      "onsails/lspkind-nvim",
     },
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
       ---@diagnostic disable: missing-fields
       opts.formatting = {
-        format = require('lspkind').cmp_format({
-          before = require('tailwind-tools.cmp').lspkind_format,
+        format = require("lspkind").cmp_format({
+          before = require("tailwind-tools.cmp").lspkind_format,
         }),
       }
       ---@diagnostic enable: missing-fields

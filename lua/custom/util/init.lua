@@ -6,6 +6,8 @@ local LazyUtil = require("lazy.core.util")
 ---@field cmp hellvim.util.cmp
 ---@field plugin hellvim.util.plugin
 ---@field format hellvim.util.format
+---@field lualine hellvim.util.lualine
+---@field mini hellvim.util.mini
 ---@field root hellvim.util.root
 local M = {}
 
@@ -14,15 +16,31 @@ setmetatable(M, {
     if LazyUtil[k] then
       return LazyUtil[k]
     end
-    -- if k == 'lazygit' or k == 'toggle' then -- HACK: special case for lazygit
-    --   return M.deprecated[k]()
-    -- end
     ---@diagnostic disable-next-line: no-unknown
     t[k] = require("custom.util." .. k)
-    -- M.deprecated.decorate(k, t[k])
     return t[k]
   end,
 })
+
+---Checks if the current OS is Linux
+function M.is_windows()
+  return vim.uv.os_uname().sysname:find("Windows") ~= nil
+end
+
+---Checks if the current OS is Linux
+function M.is_linux()
+  return vim.uv.os_uname().sysname:find("Linux") ~= nil
+end
+
+---Checks if the current OS is macOS
+function M.is_mac()
+  return vim.uv.os_uname().sysname:find("Darwin") ~= nil
+end
+
+---Checks if the current OS is WSL (Windows Subsystem for Linux)
+function M.is_wsl()
+  return os.getenv("WSL_DISTRO_NAME") ~= nil
+end
 
 ---@description Get the opts for a plugin
 ---@param name string
@@ -48,6 +66,24 @@ function M.is_loaded(name)
   return Config.plugins[name] and Config.plugins[name]._.loaded
 end
 
+---@param name string
+---@param fn fun(name:string)
+function M.on_load(name, fn)
+  if M.is_loaded(name) then
+    fn(name)
+  else
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "LazyLoad",
+      callback = function(event)
+        if event.data == name then
+          fn(name)
+          return true
+        end
+      end,
+    })
+  end
+end
+
 ---@generic T
 ---@param list T[]
 ---@return T[]
@@ -61,6 +97,16 @@ function M.dedup(list)
     end
   end
   return ret
+end
+
+---Convert a string or table to a table
+---@param str_or_tbl string|string[]
+---@return string[]
+function M.str_to_tbl(str_or_tbl)
+  if type(str_or_tbl) == "string" then
+    return { str_or_tbl }
+  end
+  return str_or_tbl
 end
 
 M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)

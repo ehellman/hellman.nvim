@@ -50,6 +50,7 @@ end
 ---@type LazySpec
 return {
   "echasnovski/mini.pairs",
+  version = false,
   event = "LazyFile",
   -- event = 'VeryLazy',
   opts = {

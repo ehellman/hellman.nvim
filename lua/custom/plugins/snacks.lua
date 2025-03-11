@@ -1,3 +1,4 @@
+---@type HellPicker
 local picker = {
   name = "snacks",
   commands = {
@@ -13,6 +14,7 @@ local picker = {
   end,
 }
 
+---@module 'lazy'
 ---@type LazySpec
 return {
   {
@@ -21,14 +23,14 @@ return {
     lazy = false,
     keys = function()
       local Snacks = require("snacks")
+      ---@type LazyKeysSpec[]
       return {
         --stylua: ignore start
         --- Buffers 
-        { '<leader>bd',function() Snacks.bufdelete.delete() end, desc = '[d]elete' },
+        { '<leader>bd', function() Snacks.bufdelete.delete() end, desc = '[d]elete' },
         { '<leader>bdc',function() Snacks.bufdelete.delete() end, desc = '[c]urrent' },
         { '<leader>bdo', function() Snacks.bufdelete.other() end, desc = '[o]ther than current' },
         { '<leader>bda', function() Snacks.bufdelete.all() end, desc = '[a]ll' },
-        --
         --
         --- Git/Lazygit
         { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazy[g]it' },
@@ -64,6 +66,10 @@ return {
         --- Scratch
         { "<leader>.",  function() Snacks.scratch() end, desc = "toggle scratch buffer" },
         { "<leader>.s",  function() Snacks.scratch.select() end, desc = "search [s]cratch buffer" },
+        --
+        --- Toggles
+        -- { "<leader>ull",  function() Snacks.toggle.line_number() end, desc = "[l]ine numbers" },
+        -- { "<leader>ulr", function() Snacks.toggle.option("relativenumber") end, desc = "[r]elative" },
         --
         --stylua: ignore end
       }
@@ -242,6 +248,8 @@ return {
         style = "compact",
       },
 
+      debug = { enabled = true },
+
       scratch = {
         enabled = true,
       },
@@ -250,7 +258,7 @@ return {
 
       quickfile = { enabled = false },
 
-      scroll = { enabled = false },
+      scroll = { enabled = true },
 
       ---@class snacks.statuscolumn.Config
       statuscolumn = {
@@ -282,10 +290,18 @@ return {
         { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'goto [I]mplementation' },
         { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'goto t[y]pe definition' },
         -- { '<leader>csd', function() Snacks.picker.lsp_symbols() end, desc = '[D]ocument Symbols' },
-        { '<leader>csd', function() Snacks.picker.lsp_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[d]ocument symbols',has = 'documentSymbol'  },
-        { '<leader>csw', function() Snacks.picker.lsp_workspace_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[w]orkspace symbols',has = 'workspace/symbols'  },
+        { '<leader>scd', function() Snacks.picker.lsp_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[d]ocument symbols',has = 'documentSymbol'  },
+        { '<leader>scw', function() Snacks.picker.lsp_workspace_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[w]orkspace symbols',has = 'workspace/symbols'  },
         -- stylua: ignore end
       })
     end,
+  },
+  {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        { "<leader>sc", group = "[c]ode" },
+      },
+    },
   },
 }

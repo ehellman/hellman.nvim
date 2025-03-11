@@ -10,7 +10,69 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
-  config = function()
+  -- opts = function(_, optsw
+  --
+  --   return opts
+  -- end,
+  opts = {
+    theme = "catppuccin",
+    sections = {
+      lualine_a = {
+        {
+          "mode",
+        },
+      },
+      lualine_b = { "branch", "diff", "diagnostics" },
+      lualine_c = {
+        -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+        -- {
+        --   harpoon_comp,
+        --   icons_enabled = true,
+        -- },
+      },
+      lualine_x = {
+          -- stylua: ignore
+          -- {
+          --   function() return require("noice").api.status.command.get() end,
+          --   cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+          --   color = function() return { fg = Snacks.util.color("Statement") } end,
+          -- },
+          -- -- stylua: ignore
+          -- {
+          --   function() return require("noice").api.status.mode.get() end,
+          --   cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+          --   color = function() return { fg = Snacks.util.color("Constant") } end,
+          -- },
+          -- stylua: ignore
+          {
+            function() return "  " .. require("dap").status() end,
+            cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+            color = function() return { fg = Snacks.util.color("Debug") } end,
+          },
+          -- stylua: ignore
+          {
+            require("lazy.status").updates,
+            cond = require("lazy.status").has_updates,
+            color = function() return { fg = Snacks.util.color("Special") } end,
+          },
+      },
+      lualine_y = {
+        { "progress", separator = " ", padding = { left = 1, right = 0 } },
+        { "location", padding = { left = 0, right = 1 } },
+        { "filetype", padding = { left = 1, right = 1 } },
+      },
+      lualine_z = { "hostname" },
+    },
+    extensions = { "neo-tree", "lazy", "fzf" },
+    options = {
+      disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
+      section_separators = { left = "", right = "" },
+      component_separators = { left = "", right = "" },
+      -- component_separators = { left = '', right = '' },
+      -- section_separators = { left = '', right = '' },
+    },
+  },
+  config = function(_, opts)
     -- local harpoon_comp = function()
     --   -- simplified version of this https://github.com/letieu/harpoon-lualine
     --   local options = {
@@ -49,63 +111,6 @@ return {
     --   return table.concat(status, options.separator)
     -- end
 
-    require("lualine").setup({
-      theme = "catppuccin",
-      sections = {
-        lualine_a = {
-          {
-            "mode",
-          },
-        },
-        lualine_b = { "branch", "diff", "diagnostics" },
-        lualine_c = {
-          -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
-          -- {
-          --   harpoon_comp,
-          --   icons_enabled = true,
-          -- },
-        },
-        lualine_x = {
-          -- stylua: ignore
-          -- {
-          --   function() return require("noice").api.status.command.get() end,
-          --   cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-          --   color = function() return { fg = Snacks.util.color("Statement") } end,
-          -- },
-          -- -- stylua: ignore
-          -- {
-          --   function() return require("noice").api.status.mode.get() end,
-          --   cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-          --   color = function() return { fg = Snacks.util.color("Constant") } end,
-          -- },
-          -- stylua: ignore
-          {
-            function() return "  " .. require("dap").status() end,
-            cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-            color = function() return { fg = Snacks.util.color("Debug") } end,
-          },
-          -- stylua: ignore
-          {
-            require("lazy.status").updates,
-            cond = require("lazy.status").has_updates,
-            color = function() return { fg = Snacks.util.color("Special") } end,
-          },
-        },
-        lualine_y = {
-          { "progress", separator = " ", padding = { left = 1, right = 0 } },
-          { "location", padding = { left = 0, right = 1 } },
-          { "filetype", padding = { left = 1, right = 1 } },
-        },
-        lualine_z = { "hostname" },
-      },
-      extensions = { "neo-tree", "lazy", "fzf" },
-      options = {
-        disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
-        section_separators = { left = "", right = "" },
-        component_separators = { left = "", right = "" },
-        -- component_separators = { left = '', right = '' },
-        -- section_separators = { left = '', right = '' },
-      },
-    })
+    require("lualine").setup(vim.tbl_deep_extend("force", opts, {}))
   end,
 }

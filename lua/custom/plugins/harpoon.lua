@@ -92,6 +92,13 @@ return {
           desc = "[r]eset harpoon marks",
         },
       },
+      icons = {
+        ---@type wk.IconRule[]
+        rules = {
+          -- ignore [] and match against harpoon*
+          { plugin = "ThePrimeagen/harpoon", pattern = "%f[%w]h?arpoon[a-z]*%f[%W]", icon = "󰀱", color = "orange" },
+        },
+      },
     },
   },
 }

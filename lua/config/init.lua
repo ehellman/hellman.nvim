@@ -1,4 +1,4 @@
-_G.HellVim = require('custom.util')
+_G.HellVim = require("custom.util")
 
 ---@class HellVimConfig
 local M = {}
@@ -7,107 +7,107 @@ HellVim.config = M
 
 M.icons = {
   misc = {
-    dots = '󰇘',
+    dots = "󰇘",
   },
   ft = {
-    octo = '',
+    octo = "",
   },
   dap = {
-    Stopped = { '󰁕 ', 'DiagnosticWarn', 'DapStoppedLine' },
-    Breakpoint = ' ',
-    BreakpointCondition = ' ',
-    BreakpointRejected = { ' ', 'DiagnosticError' },
-    LogPoint = '.>',
+    Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+    Breakpoint = " ",
+    BreakpointCondition = " ",
+    BreakpointRejected = { " ", "DiagnosticError" },
+    LogPoint = ".>",
   },
   diagnostics = {
-    Error = ' ',
-    Warn = ' ',
-    Hint = ' ',
-    Info = ' ',
+    Error = " ",
+    Warn = " ",
+    Hint = " ",
+    Info = " ",
   },
   git = {
-    added = ' ',
-    modified = ' ',
-    removed = ' ',
+    added = " ",
+    modified = " ",
+    removed = " ",
   },
   kinds = {
-    Array = ' ',
-    Boolean = '󰨙 ',
-    Class = ' ',
-    Codeium = '󰘦 ',
-    Color = ' ',
-    Control = ' ',
-    Collapsed = ' ',
-    Constant = '󰏿 ',
-    Constructor = ' ',
-    Copilot = ' ',
-    Enum = ' ',
-    EnumMember = ' ',
-    Event = ' ',
-    Field = ' ',
-    File = ' ',
-    Folder = ' ',
-    Function = '󰊕 ',
-    Interface = ' ',
-    Key = ' ',
-    Keyword = ' ',
-    Method = '󰊕 ',
-    Module = ' ',
-    Namespace = '󰦮 ',
-    Null = ' ',
-    Number = '󰎠 ',
-    Object = ' ',
-    Operator = ' ',
-    Package = ' ',
-    Property = ' ',
-    Reference = ' ',
-    Snippet = '󱄽 ',
-    String = ' ',
-    Struct = '󰆼 ',
-    Supermaven = ' ',
-    TabNine = '󰏚 ',
-    Text = ' ',
-    TypeParameter = ' ',
-    Unit = ' ',
-    Value = ' ',
-    Variable = '󰀫 ',
+    Array = " ",
+    Boolean = "󰨙 ",
+    Class = " ",
+    Codeium = "󰘦 ",
+    Color = " ",
+    Control = " ",
+    Collapsed = " ",
+    Constant = "󰏿 ",
+    Constructor = " ",
+    Copilot = " ",
+    Enum = " ",
+    EnumMember = " ",
+    Event = " ",
+    Field = " ",
+    File = " ",
+    Folder = " ",
+    Function = "󰊕 ",
+    Interface = " ",
+    Key = " ",
+    Keyword = " ",
+    Method = "󰊕 ",
+    Module = " ",
+    Namespace = "󰦮 ",
+    Null = " ",
+    Number = "󰎠 ",
+    Object = " ",
+    Operator = " ",
+    Package = " ",
+    Property = " ",
+    Reference = " ",
+    Snippet = "󱄽 ",
+    String = " ",
+    Struct = "󰆼 ",
+    Supermaven = " ",
+    TabNine = "󰏚 ",
+    Text = " ",
+    TypeParameter = " ",
+    Unit = " ",
+    Value = " ",
+    Variable = "󰀫 ",
   },
 }
 
 ---@type table<string, string[]|boolean>?
 M.kind_filter = {
   default = {
-    'Class',
-    'Constructor',
-    'Enum',
-    'Field',
-    'Function',
-    'Interface',
-    'Method',
-    'Module',
-    'Namespace',
-    'Package',
-    'Property',
-    'Struct',
-    'Trait',
+    "Class",
+    "Constructor",
+    "Enum",
+    "Field",
+    "Function",
+    "Interface",
+    "Method",
+    "Module",
+    "Namespace",
+    "Package",
+    "Property",
+    "Struct",
+    "Trait",
   },
   markdown = false,
   help = false,
   -- you can specify a different filter for each filetype
   lua = {
-    'Class',
-    'Constructor',
-    'Enum',
-    'Field',
-    'Function',
-    'Interface',
-    'Method',
-    'Module',
-    'Namespace',
+    "Class",
+    "Constructor",
+    "Enum",
+    "Field",
+    "Function",
+    "Interface",
+    "Method",
+    "Module",
+    "Namespace",
     -- "Package", -- remove package since luals uses it for control flow structures
-    'Property',
-    'Struct',
-    'Trait',
+    "Property",
+    "Struct",
+    "Trait",
   },
 }
 
@@ -123,17 +123,17 @@ M.init = function()
   -- end
   -- M.load('keymaps')
 
-  require('config.options')
-  require('config.keymaps')
-  require('config.autocmds')
+  require("config.options")
+  require("config.keymaps")
+  require("config.autocmds")
 
   HellVim.format.setup()
   HellVim.root.setup()
 
-  vim.api.nvim_create_user_command('LazyHealth', function()
+  vim.api.nvim_create_user_command("LazyHealth", function()
     vim.cmd([[Lazy! load all]])
     vim.cmd([[checkhealth]])
-  end, { desc = 'Load all plugins and run :checkhealth' })
+  end, { desc = "Load all plugins and run :checkhealth" })
   -- vim.api.nvim_create_autocmd('User', {
   --   group = group,
   --   pattern = 'VeryLazy',
@@ -188,24 +188,24 @@ end
 ---@param name "autocmds" | "options" | "keymaps"
 function M.load(name)
   local function _load(mod)
-    if require('lazy.core.cache').find(mod)[1] then
+    if require("lazy.core.cache").find(mod)[1] then
       HellVim.try(function()
         require(mod)
-      end, { msg = 'Failed loading ' .. mod })
+      end, { msg = "Failed loading " .. mod })
     end
   end
-  local pattern = 'HellVim' .. name:sub(1, 1):upper() .. name:sub(2)
+  local pattern = "HellVim" .. name:sub(1, 1):upper() .. name:sub(2)
   -- always load lazyvim, then user file
   -- if M.defaults[name] or name == 'options' then
   --   _load('custom.config.' .. name)
   --   vim.api.nvim_exec_autocmds('User', { pattern = pattern .. 'Defaults', modeline = false })
   -- end
-  _load('config.' .. name)
-  if vim.bo.filetype == 'lazy' then
+  _load("config." .. name)
+  if vim.bo.filetype == "lazy" then
     -- HACK: LazyVim may have overwritten options of the Lazy ui, so reset this here
     vim.cmd([[do VimResized]])
   end
-  vim.api.nvim_exec_autocmds('User', { pattern = pattern, modeline = false })
+  vim.api.nvim_exec_autocmds("User", { pattern = pattern, modeline = false })
 end
 
 return M

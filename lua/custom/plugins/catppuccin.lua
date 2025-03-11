@@ -106,10 +106,10 @@ return {
         indentscope_color = "lavender",
       },
       treesitter = true,
+      treesitter_context = true,
       neotest = true,
       illuminate = true,
       flash = true,
-      treesitter_context = true,
       dap_ui = true,
       dap = true,
       telescope = {

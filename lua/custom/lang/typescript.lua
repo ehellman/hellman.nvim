@@ -1,16 +1,25 @@
 ---@type LazySpec
 return {
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        'ts_ls',
-        'prettier',
+        "ts_ls",
+        "prettierd",
       },
     },
   },
   {
-    'neovim/nvim-lspconfig',
+    "nvim-treesitter/nvim-treesitter",
+    opts = { ensure_installed = { "javascript", "jsdoc", "typescript" } },
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    ft = { "javascriptreact", "typescriptreact" },
+    opts = {},
+  },
+  {
+    "neovim/nvim-lspconfig",
     opts = {
       servers = {
         ---@type vim.lsp.Config
@@ -22,7 +31,7 @@ return {
                 includeInlayEnumMemberValueHints = true,
                 includeInlayFunctionLikeReturnTypeHints = true,
                 includeInlayFunctionParameterTypeHints = true,
-                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all';
+                includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all';
                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
                 includeInlayPropertyDeclarationTypeHints = true,
                 includeInlayVariableTypeHints = false,
@@ -44,6 +53,20 @@ return {
       --   return true
       -- end,
       -- }
+    },
+  },
+  {
+    "stevearc/conform.nvim",
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      formatters_by_ft = {
+        javascript = { "prettierd" },
+        typescript = { "prettierd" },
+        typescriptreact = { "prettierd" },
+        javascriptreact = { "prettierd" },
+        vue = { "prettierd" },
+      },
     },
   },
   -- {

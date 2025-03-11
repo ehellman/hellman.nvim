@@ -1,22 +1,22 @@
 ---@type LazySpec
 return {
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        'cssls',
-        'cssmodules_ls',
-        'prettier',
-        'tailwindcss',
+        "cssls",
+        "cssmodules_ls",
+        "prettierd",
+        "tailwindcss",
       },
     },
   },
   {
-    'nvim-treesitter/nvim-treesitter',
-    opts = { ensure_installed = { 'css', 'scss' } },
+    "nvim-treesitter/nvim-treesitter",
+    opts = { ensure_installed = { "css", "scss" } },
   },
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     opts = {
       servers = {
         cssls = {
@@ -25,7 +25,7 @@ return {
             css = {
               lint = {
                 -- useful for waybar, tailwind etc
-                unknownAtRules = 'ignore',
+                unknownAtRules = "ignore",
               },
             },
           },
@@ -39,7 +39,15 @@ return {
   },
   {
     -- conform
-    'stevearc/conform.nvim',
-    opts = {},
+    "stevearc/conform.nvim",
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      formatters_by_ft = {
+        css = { "prettierd" },
+        scss = { "prettierd" },
+        less = { "prettierd" },
+      },
+    },
   },
 }

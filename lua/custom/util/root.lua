@@ -187,7 +187,7 @@ function M.get(opts)
   if opts and opts.normalize then
     return ret
   end
-  return HellVim.is_win() and ret:gsub("/", "\\") or ret
+  return HellVim.is_windows() and ret:gsub("/", "\\") or ret
 end
 
 function M.git()

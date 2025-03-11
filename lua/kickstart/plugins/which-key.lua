@@ -64,7 +64,7 @@ return {
         ---@type wk.IconRule[]
         rules = {
           -- ignore [] and match against harpoon*
-          { plugin = "ThePrimeagen/harpoon", pattern = "%f[%w]h?arpoon[a-z]*%f[%W]", icon = "󰀱", color = "orange" },
+          -- { plugin = "ThePrimeagen/harpoon", pattern = "%f[%w]h?arpoon[a-z]*%f[%W]", icon = "󰀱", color = "orange" },
           -- ignore [] and match against git
           { pattern = "%f[%w]git%f[%W]", icon = "", color = "red" },
         },
@@ -73,7 +73,6 @@ return {
       -- Document existing key chains
       spec = {
         { "<leader>c", group = "[c]ode", mode = { "n", "x" } },
-        { "<leader>cs", group = "code [s]ymbols" },
         { "<leader>ct", group = "[t]ailwind" },
         { "<leader>d", group = "[d]ocument" },
         { "<leader>s", group = "[s]earch" },

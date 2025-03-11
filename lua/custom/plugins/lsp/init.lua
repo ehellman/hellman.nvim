@@ -233,41 +233,41 @@ return {
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
-    'folke/lazydev.nvim',
-    ft = 'lua',
+    "folke/lazydev.nvim",
+    ft = "lua",
     ---@class PluginLspOpts
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
-        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
       },
       inlay_hints = {
         -- Enable inlay hints for all files
         enabled = true,
         -- Disable inlay hints for specific filetypes
-        disabled_filetypes = { 'markdown' },
+        disabled_filetypes = { "markdown" },
       },
     },
   },
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     -- event = 'VeryLazy',
     -- event = 'LazyFile',
     event = {
-      'BufReadPost',
-      'BufNewFile',
-      'BufWritePre',
+      "BufReadPost",
+      "BufNewFile",
+      "BufWritePre",
     },
     dependencies = {
-      'mason.nvim',
+      "mason.nvim",
       -- 'williamboman/mason-lspconfig.nvim',
       -- 'williamboman/mason.nvim',
       --TODO: difference between 2 below?
-      { 'williamboman/mason-lspconfig.nvim', config = function() end },
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      { "williamboman/mason-lspconfig.nvim", config = function() end },
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
 
       -- bottom right status updates for LSP
-      { 'j-hui/fidget.nvim', opts = {} },
+      { "j-hui/fidget.nvim", opts = {} },
 
       -- { 'hrsh7th/cmp-nvim-lsp', enabled = vim.g.cmp_variant == 'cmp' },
     },
@@ -281,8 +281,8 @@ return {
           update_in_insert = false,
           virtual_text = {
             spacing = 4,
-            source = 'if_many',
-            prefix = '●',
+            source = "if_many",
+            prefix = "●",
             -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
             -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
             -- prefix = "icons",
@@ -302,7 +302,7 @@ return {
         -- provide the inlay hints.
         inlay_hints = {
           enabled = true,
-          exclude = { 'vue' }, -- filetypes for which you don't want to enable inlay hints
+          exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints
         },
         -- Enable this to enable the builtin LSP code lenses on Neovim >= 0.10.0
         -- Be aware that you also will need to properly configure your LSP server to
@@ -331,7 +331,9 @@ return {
           timeout_ms = nil,
         },
         ---@type lspconfig.options
-        servers = {},
+        servers = {
+          bashls = {},
+        },
         -- you can do any additional lsp server setup here
         -- return true if you don't want this server to be setup with lspconfig
         ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
@@ -356,12 +358,12 @@ return {
 
       -- setup keymaps callback for when lsp.on_attach runs
       HellVim.lsp.on_attach(function(client, buffer)
-        require('custom.plugins.lsp.keymaps').on_attach(client, buffer)
+        require("custom.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
 
       -- setup dynamic capabilities registration
       HellVim.lsp.setup()
-      HellVim.lsp.on_dynamic_capability(require('custom.plugins.lsp.keymaps').on_attach)
+      HellVim.lsp.on_dynamic_capability(require("custom.plugins.lsp.keymaps").on_attach)
 
       -- diagnostics signs
       -- if vim.fn.has("nvim-0.10.0") == 0 then -- TODO: delete
@@ -374,13 +376,12 @@ return {
       --   end
       -- end
       -- diagnostics signs
-      if vim.fn.has('nvim-0.10') == 1 then
-        -- inlay hints
+      if vim.fn.has("nvim-0.10") == 1 then
         if opts.inlay_hints.enabled then
-          HellVim.lsp.on_supports_method('textDocument/inlayHint', function(client, buffer)
+          HellVim.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
             if
               vim.api.nvim_buf_is_valid(buffer)
-              and vim.bo[buffer].buftype == ''
+              and vim.bo[buffer].buftype == ""
               and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
             then
               vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
@@ -390,9 +391,9 @@ return {
 
         -- code lens
         if opts.codelens.enabled and vim.lsp.codelens then
-          HellVim.lsp.on_supports_method('textDocument/codeLens', function(client, buffer)
+          HellVim.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
             vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'InsertLeave' }, {
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
               buffer = buffer,
               callback = vim.lsp.codelens.refresh,
             })
@@ -400,8 +401,8 @@ return {
         end
       end -- TODO: end of nvim-0.10.0 check, maybe delete?
 
-      if type(opts.diagnostics.virtual_text) == 'table' and opts.diagnostics.virtual_text.prefix == 'icons' then
-        opts.diagnostics.virtual_text.prefix = vim.fn.has('nvim-0.10.0') == 0 and '●'
+      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+        opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "●"
           or function(diagnostic)
             local icons = HellVim.config.icons.diagnostics
             for d, icon in pairs(icons) do
@@ -415,11 +416,11 @@ return {
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
       local servers = opts.servers
-      local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-      local has_blink, blink = pcall(require, 'blink.cmp')
+      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      local has_blink, blink = pcall(require, "blink.cmp")
 
       local capabilities = vim.tbl_deep_extend(
-        'force',
+        "force",
         {},
         vim.lsp.protocol.make_client_capabilities(),
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
@@ -428,7 +429,7 @@ return {
       )
 
       local function setup(server)
-        local server_opts = vim.tbl_deep_extend('force', {
+        local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
         }, servers[server] or {})
         if server_opts.enabled == false then
@@ -439,20 +440,20 @@ return {
           if opts.setup[server](server, server_opts) then
             return
           end
-        elseif opts.setup['*'] then
-          if opts.setup['*'](server, server_opts) then
+        elseif opts.setup["*"] then
+          if opts.setup["*"](server, server_opts) then
             return
           end
         end
-        require('lspconfig')[server].setup(server_opts)
+        require("lspconfig")[server].setup(server_opts)
       end
 
       -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, 'mason-lspconfig')
-      local have_mason_tool_installer, mason_tool_installer = pcall(require, 'mason-tool-installer')
+      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+      local have_mason_tool_installer, mason_tool_installer = pcall(require, "mason-tool-installer")
       local all_mslp_servers = {}
       if have_mason then
-        all_mslp_servers = vim.tbl_keys(require('mason-lspconfig.mappings.server').lspconfig_to_package)
+        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
       end
 
       local ensure_installed = {} ---@type string[]
@@ -472,17 +473,17 @@ return {
 
       if have_mason then
         vim.tbl_deep_extend(
-          'force',
+          "force",
           ensure_installed,
-          HellVim.opts('mason.nvim').ensure_installed or {},
-          HellVim.opts('mason-lspconfig.nvim').ensure_installed or {}
+          HellVim.opts("mason.nvim").ensure_installed or {},
+          HellVim.opts("mason-lspconfig.nvim").ensure_installed or {}
         )
-        if have_mason_tool_installer then
-          --TODO: if i install with tool installer instead of mason,
-          --it does not install the stuff from the merged ensure_installed in the
-          --mason-tool-installer module declaration
-          --   mason_tool_installer.setup({ ensure_installed = ensure_installed })
-        end
+        -- if have_mason_tool_installer then
+        --TODO: if i install with tool installer instead of mason,
+        --it does not install the stuff from the merged ensure_installed in the
+        --mason-tool-installer module declaration
+        --   mason_tool_installer.setup({ ensure_installed = ensure_installed })
+        -- end
         -- vim.notify('Installing LSP servers: ' .. table.concat(ensure_installed, ', '), 'info')
         mlsp.setup({
           ensure_installed = ensure_installed or {},
@@ -492,10 +493,10 @@ return {
         })
       end
 
-      if HellVim.lsp.is_enabled('denols') and HellVim.lsp.is_enabled('vtsls') then
-        local is_deno = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc')
-        HellVim.lsp.disable('vtsls', is_deno)
-        HellVim.lsp.disable('denols', function(root_dir, config)
+      if HellVim.lsp.is_enabled("denols") and HellVim.lsp.is_enabled("vtsls") then
+        local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+        HellVim.lsp.disable("vtsls", is_deno)
+        HellVim.lsp.disable("denols", function(root_dir, config)
           if not is_deno(root_dir) then
             config.settings.deno.enable = false
           end
@@ -506,7 +507,7 @@ return {
   },
   {
     ---@module 'mason-tool-installer'
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     -- cmd = {
     --   'MasonToolsInstall',
     --   'MasonToolsInstallSync',
@@ -514,36 +515,40 @@ return {
     --   'MasonToolsUpdateSync',
     --   'MasonToolsClean',
     -- },
-    dependencies = { 'williamboman/mason-lspconfig.nvim' },
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
+    opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {},
     },
     ---@param opts {ensure_installed: string[]}
     config = function(_, opts)
-      -- print('MASONTOOLSENSUREINSTALLED', vim.inspect(opts.ensure_installed))
-      require('mason-tool-installer').setup({
-        ensure_installed = opts.ensure_installed,
+      require("mason-tool-installer").setup({
+        ensure_installed = HellVim.dedup(opts.ensure_installed),
         -- auto_update = true,
       })
 
-      vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+      vim.api.nvim_create_autocmd({ "BufEnter" }, {
         once = true,
         callback = function()
-          -- vim.notify('Sending MasonToolsInstall cmd', vim.log.levels.INFO)
-          vim.cmd('MasonToolsInstall')
+          -- vim.notify("Sending MasonToolsInstall cmd", vim.log.levels.INFO)
+          vim.cmd("MasonToolsInstall")
         end,
       })
 
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'MasonToolsStartingInstall',
-        callback = function()
-          -- print('Mason trigger tools to install')
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MasonToolsStartingInstall",
+        callback = function(event)
+          -- vim.notify(
+          --   "Starting Mason tool installation of: " .. vim.inspect(event),
+          --   vim.log.levels.INFO,
+          --   { title = "MasonToolInstaller" }
+          -- )
           -- vim.notify('Starting Mason tool installation', vim.log.levels.INFO)
         end,
       })
 
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'MasonToolsUpdateCompleted',
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MasonToolsUpdateCompleted",
         ---@class MasonToolsUpdateResult
         ---@field buf number Buffer number associated with the event
         ---@field data string[] Package names
@@ -553,11 +558,30 @@ return {
         ---@field match string Matching event pattern
         callback = function(result)
           -- print('Mason trigger tools update result:', vim.inspect(result))
-          -- vim.notify('Completed!', vim.log.levels.INFO, { title = 'MasonToolsUpdate' })
+          local successes = {}
+          local failed = {}
           for tool, success in pairs(result.data) do
-            if not success then
-              vim.notify('Failed to install: ' .. tool, vim.log.levels.ERROR, { title = 'MasonToolInstaller' })
+            if success then
+              table.insert(successes, tool)
+              -- vim.notify("Successfully updated: " .. tool, vim.log.levels.INFO, { title = "MasonToolInstaller" })
+            else
+              table.insert(failed, tool)
+              -- vim.notify("Failed to install: " .. tool, vim.log.levels.ERROR, { title = "MasonToolInstaller" })
             end
+          end
+          if #successes > 0 then
+            vim.notify(
+              "Successfully installed/updated " .. table.concat(successes, ", "),
+              vim.log.levels.INFO,
+              { title = "MasonToolInstaller" }
+            )
+          end
+          if #failed > 0 then
+            vim.notify(
+              "Failed to install/update: " .. table.concat(failed, ", "),
+              vim.log.levels.ERROR,
+              { title = "MasonToolInstaller" }
+            )
           end
         end,
       })
@@ -583,25 +607,57 @@ return {
   --   end,
   -- },
   {
-    'williamboman/mason.nvim',
-    cmd = 'Mason',
-    keys = { { '<leader>pm', '<cmd>Mason<cr>', desc = 'Mason' } },
-    build = ':MasonUpdate',
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" } },
+    build = ":MasonUpdate",
     -- dependencies = {
     --   'williamboman/mason-lspconfig.nvim',
     --   'WhoIsSethDaniel/mason-tool-installer.nvim',
     -- },
-    -- opts_extend = { 'ensure_installed' },
+    opts_extend = { "ensure_installed", "registries" },
     ---@module 'mason'
     ---@type MasonSettings
     opts = {
       ui = {
-        border = 'rounded',
+        border = "rounded",
+      },
+      registries = {
+        "github:mason-org/mason-registry",
+        "github:Crashdummyy/mason-registry",
       },
       -- ensure_installed = {
       --   'stylua',
       --   'shfmt',
       -- },
     },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require("mason-registry")
+      mr:on("package:install:success", function(package)
+        vim.defer_fn(function()
+          vim.notify(
+            "Mason package (" .. package.name .. ") installed successfully",
+            vim.log.levels.INFO,
+            { title = "Mason" }
+          )
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger({
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          })
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
+    end,
   },
 }

@@ -36,15 +36,25 @@ return {
     ---@type TSConfig
     opts = {
       ensure_installed = {
-        "bash",
+        "asm", -- Assembly
         "c",
         "diff",
+        "regex",
+        "query",
+
+        "git_config",
+        "git_rebase",
+        "gitattributes",
+        "gitcommit",
+        "gitignore",
+
+        "ssh_config",
+        "ini",
+        "tmux",
+        "xml",
+
         "html",
         "hyprlang",
-        "lua",
-        "luadoc",
-        "markdown",
-        "markdown_inline",
         "query",
         "vim",
         "vimdoc",
@@ -59,13 +69,28 @@ return {
           if string.find(vim.bo.filetype, "chezmoitmpl") then
             return true
           end
+          -- disable highlight for large files
+          -- local max_filesize = 100 * 1024 -- 100 KB
+          -- local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+          -- if ok and stats and stats.size > max_filesize then
+          --   return true
+          -- end
         end,
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { "ruby" },
       },
-      indent = { enable = true, disable = { "ruby" } },
+      indent = {
+        enable = true,
+        -- Disable indent on certain file types
+        disable = { "ruby" },
+      },
+      -- configure andymass/vim-matchup
+      -- matchup = {
+      --   enable = true,
+      --   disable_virtual_text = true,
+      -- },
       incremental_selection = {
         enable = true,
         keymaps = {
@@ -96,6 +121,7 @@ return {
       if type(opts.ensure_installed) == "table" then
         opts.ensure_installed = HellVim.dedup(opts.ensure_installed)
       end
+      print("ts ei" .. vim.inspect(opts.ensure_installed))
       require("nvim-treesitter.configs").setup(opts)
       -- require('nvim-treesitter.configs').setup(opts)
       -- vim.filetype.add {
@@ -116,7 +142,7 @@ return {
 
       -- When in diff mode, we want to use the default
       -- vim text objects c & C instead of the treesitter ones.
-      local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
+      local move = require("nvim-treesitter.textobjects.move")
       local configs = require("nvim-treesitter.configs")
       for name, fn in pairs(move) do
         if name:find("goto") == 1 then
@@ -141,6 +167,7 @@ return {
     event = "LazyFile",
     opts = function()
       local tsc = require("treesitter-context")
+      ---@type snacks.toggle
       Snacks.toggle({
         name = "Treesitter Context",
         get = tsc.enabled,
