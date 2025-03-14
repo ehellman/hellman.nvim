@@ -59,6 +59,11 @@ function M.get_plugin(name)
   return require("lazy.core.config").spec.plugins[name]
 end
 
+---@param plugin string
+function M.has(plugin)
+  return M.get_plugin(plugin) ~= nil
+end
+
 ---@description Check if a plugin is loaded
 ---@param name string
 function M.is_loaded(name)
@@ -82,6 +87,16 @@ function M.on_load(name, fn)
       end,
     })
   end
+end
+
+---@param fn fun()
+function M.on_very_lazy(fn)
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "VeryLazy",
+    callback = function()
+      fn()
+    end,
+  })
 end
 
 ---@generic T

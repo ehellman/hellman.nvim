@@ -103,6 +103,7 @@ vim.keymap.set("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap 
 vim.keymap.set("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
 vim.keymap.set("n", "<leader>Wd", "<C-W>c", { desc = "[d]elete window", remap = true })
 
+-- toggles
 -- Snacks.toggle.zoom():vim.keymap.set("<leader>wm"):map("<leader>uZ")
 -- Snacks.toggle.zen():vim.keymap.set("<leader>uz")
 

@@ -121,7 +121,6 @@ return {
       if type(opts.ensure_installed) == "table" then
         opts.ensure_installed = HellVim.dedup(opts.ensure_installed)
       end
-      print("ts ei" .. vim.inspect(opts.ensure_installed))
       require("nvim-treesitter.configs").setup(opts)
       -- require('nvim-treesitter.configs').setup(opts)
       -- vim.filetype.add {

@@ -41,12 +41,32 @@ function M.resolve(buf)
 end
 
 ---@param opts? {force?:boolean, buf?:number}
-function M.format(opts)
-  -- vim.notify('>HELLFORMAT<', 'info')
+M.should_format_based_on_toggle = function(opts)
   opts = opts or {}
   local buf = opts.buf or vim.api.nvim_get_current_buf()
   if not ((opts and opts.force) or M.enabled(buf)) then
-    -- vim.notify('>BAILED LOL<', 'info')
+    return false
+  end
+
+  if not opts.force then
+    if vim.b.autoformat or vim.b[buf].autoformat then
+      -- buffer formatting enabled, no need to check global
+      return true
+    elseif not vim.g.autoformat then
+      -- global autoformat is disabled
+      return false
+    end
+  end
+  return true
+end
+
+---@param opts? {force?:boolean, buf?:number}
+function M.format(opts)
+  opts = opts or {}
+
+  local buf = opts.buf or vim.api.nvim_get_current_buf()
+
+  if not ((opts and opts.force) or M.enabled(buf) or M.should_format_based_on_toggle(opts)) then
     return
   end
 
@@ -54,8 +74,7 @@ function M.format(opts)
   for _, formatter in ipairs(M.resolve(buf)) do
     if formatter.active then
       done = true
-
-      -- vim.notify('Formatting with ' .. formatter.name, 'info', { title = 'HellFormat' })
+      HellVim.info("formatting with " .. formatter.name, { title = "hellvim:formatter" })
       HellVim.try(function()
         return formatter.format(buf)
       end, { msg = "Formatter `" .. formatter.name .. "` failed" })
@@ -63,8 +82,15 @@ function M.format(opts)
   end
 
   if not done and opts and opts.force then
-    HellVim.warn("No formatter available", { title = "LazyVim" })
+    HellVim.warn("No formatter available", { title = "hellvim:formatter" })
   end
+end
+
+function M.formatexpr()
+  if HellVim.has("conform.nvim") then
+    return require("conform").formatexpr()
+  end
+  return vim.lsp.formatexpr({ timeout_ms = 3000 })
 end
 
 ---@param buf? number
@@ -97,7 +123,16 @@ function M.enable(enable, buf)
     vim.b.autoformat = enable
   else
     vim.g.autoformat = enable
-    vim.b.autoformat = nil
+    -- should enable/disable buffer autoformat together with global
+    if vim.g.autoformat_reset_buf_with_global then
+      for _, bufno in ipairs(vim.api.nvim_list_bufs()) do
+        -- nuke all specific buffer settings
+        vim.b[bufno].autoformat = nil
+      end
+      vim.b.autoformat = enable
+    else -- should NOT enable/disable buffer autoformat together with global (if manually set)
+      vim.b.autoformat = nil
+    end
   end
   M.info()
 end
@@ -153,6 +188,29 @@ function M.setup()
   vim.api.nvim_create_user_command("HellFormatInfo", function()
     M.info()
   end, { desc = "Show info about the formatters for the current buffer" })
+
+  -- keymaps
+  HellVim.on_load("snacks.nvim", function()
+    M.snacks_toggle():map("<leader>uf")
+    M.snacks_toggle():map("<leader>ufg")
+    M.snacks_toggle(true):map("<leader>ufb")
+  end)
+end
+
+---@param buf? boolean
+function M.snacks_toggle(buf)
+  return Snacks.toggle({
+    name = "Auto Format (" .. (buf and "Buffer" or "Global") .. ")",
+    get = function()
+      if not buf then
+        return vim.g.autoformat == nil or vim.g.autoformat
+      end
+      return HellVim.format.enabled()
+    end,
+    set = function(state)
+      HellVim.format.enable(state, buf)
+    end,
+  })
 end
 
 return M

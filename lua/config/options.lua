@@ -20,6 +20,15 @@ vim.g.cmp_variant = "cmp"
 -- copilot suggestions in cmp
 vim.g.ai_cmp = true
 
+--- autoformat
+-- reset specific buffer format toggles together with global toggle
+vim.g.autoformat_reset_buf_with_global = false
+vim.g.autoformat = true
+vim.b.autoformat = true
+vim.g.eslint_autoformat = true
+-- vim.g.eslint_autofix = true
+vim.g.eslint_priority = true -- run eslint formatter before other formatters
+
 -- [[ OS Specific ]]
 vim.g.path_separator = HellVim.is_windows() and "\\" or "/"
 vim.g.delimiter = HellVim.is_windows() and ";" or ":"
@@ -59,6 +68,9 @@ vim.o.shiftwidth = 2 -- Size of indent
 vim.o.smartindent = true -- Smart autoindenting
 vim.o.tabstop = 2 -- Number of spaces tabs count for
 vim.o.softtabstop = 2 -- Number of spaces for soft tabs
+opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
+-- opt.formatoptions = "jcroqlnt" -- tcqj
+opt.grepformat = "%f:%l:%c:%m"
 opt.formatoptions = "jcroqlnt" -- Format options (see :help fo-table)
 opt.breakindent = true -- Wrapped lines preserve indentation
 
