@@ -71,18 +71,24 @@ function M.format(opts)
   end
 
   local done = false
-  for _, formatter in ipairs(M.resolve(buf)) do
+  local buf_formatters = M.resolve(buf)
+  for idx, formatter in ipairs(buf_formatters) do
     if formatter.active then
       done = true
-      HellVim.info("formatting with " .. formatter.name, { title = "hellvim:formatter" })
+      require("fidget").notify(
+        " " .. formatter.name .. (#buf_formatters > 1 and string.format(" [%d]", idx) or ""),
+        vim.log.levels.INFO,
+        { annote = "hellvim:formatter" }
+      )
+
       HellVim.try(function()
         return formatter.format(buf)
-      end, { msg = "Formatter `" .. formatter.name .. "` failed" })
+      end, { msg = "formatter `" .. formatter.name .. "` failed" })
     end
   end
 
   if not done and opts and opts.force then
-    HellVim.warn("No formatter available", { title = "hellvim:formatter" })
+    HellVim.warn("no formatter available", { title = "hellvim:formatter" })
   end
 end
 
