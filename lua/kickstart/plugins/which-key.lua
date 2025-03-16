@@ -19,6 +19,7 @@ return {
     event = "VimEnter", -- Sets the loading event to 'VimEnter'
     opts_extend = { "spec" },
     ---@module 'which-key'
+    ---@type wk.Opts
     opts = {
       -- classic | modern | helix
       preset = "helix",
