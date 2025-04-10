@@ -19,6 +19,10 @@ return {
     -- transparent_background = 'true',
     custom_highlights = function(colors)
       return {
+
+        -- Snacks.dim
+        SnacksDim = { fg = colors.surface2 },
+
         WinSeparator = { fg = colors.surface1, style = { "bold" } },
 
         FlashMatch = { fg = colors.lavender },
