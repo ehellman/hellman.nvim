@@ -252,19 +252,17 @@ return {
   {
     "neovim/nvim-lspconfig",
     -- event = 'VeryLazy',
-    -- event = 'LazyFile',
-    event = {
-      "BufReadPost",
-      "BufNewFile",
-      "BufWritePre",
-    },
+    event = "LazyFile",
+    -- event = {
+    --   "BufReadPost",
+    --   "BufNewFile",
+    --   "BufWritePre",
+    -- },
     dependencies = {
       "mason.nvim",
-      -- 'williamboman/mason-lspconfig.nvim',
       -- 'williamboman/mason.nvim',
       --TODO: difference between 2 below?
       { "williamboman/mason-lspconfig.nvim", config = function() end },
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
 
       -- bottom right status updates for LSP
       { "j-hui/fidget.nvim", opts = {} },
@@ -450,7 +448,6 @@ return {
 
       -- get all the servers that are available through mason-lspconfig
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      local have_mason_tool_installer, mason_tool_installer = pcall(require, "mason-tool-installer")
       local all_mslp_servers = {}
       if have_mason then
         all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
