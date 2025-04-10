@@ -35,6 +35,26 @@ function M.on_attach(on_attach, name)
   })
 end
 
+function M.hover()
+  local max_width = math.floor(vim.o.columns * 0.5)
+  local max_height = math.floor(vim.o.lines * 0.3)
+
+  local params = vim.lsp.util.make_position_params()
+
+  vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_hover, params, function(_, result, ctx, config)
+    if result and result.contents then
+      -- Customize floating window options
+      local opts = {
+        border = "rounded",
+        max_width = max_width,
+        max_height = max_height,
+      }
+
+      vim.lsp.handlers.hover(_, result, ctx, opts)
+    end
+  end)
+end
+
 ---@type table<string, table<vim.lsp.Client, table<number, boolean>>>
 M._supports_method = {}
 
