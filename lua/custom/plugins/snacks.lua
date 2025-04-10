@@ -256,10 +256,11 @@ return {
         },
       },
 
+      ---@type snacks.notifier.Config
       notifier = {
         enabled = true,
-        ---@type snacks.notifier.style
         style = "compact",
+        level = "info",
       },
 
       debug = { enabled = true },
