@@ -1,17 +1,22 @@
 if vim.g.enable_arrow then
-  local wk = require("which-key")
+  HellVim.on_load("which-key.nvim", function()
+    vim.notify("which-key.nvim loaded", vim.log.levels.INFO, { title = "arrow.nvim" })
+    vim.schedule(function()
+      local wk = require("which-key")
 
-  for i = 1, 5 do
-    wk.add({
-      {
-        string.format("<leader>%d", i),
-        function()
-          require("arrow.persist").go_to(i)
-        end,
-        desc = string.format("jump to harpooned [%d]", i),
-      },
-    })
-  end
+      for i = 1, 5 do
+        wk.add({
+          {
+            string.format("<leader>%d", i),
+            function()
+              require("arrow.persist").go_to(i)
+            end,
+            desc = string.format("jump to harpooned [%d]", i),
+          },
+        })
+      end
+    end)
+  end)
 end
 
 return {
@@ -22,6 +27,7 @@ return {
     event = "VeryLazy",
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },
+      { "folke/which-key.nvim" },
     },
     ---@type PluginKeySpec
     keys = {
