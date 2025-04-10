@@ -18,8 +18,7 @@ return {
     build = ":UpdateRemotePlugins",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      -- 'nvim-telescope/telescope.nvim', -- optional
-      "neovim/nvim-lspconfig", -- optional
+      "neovim/nvim-lspconfig",
     },
     ft = {
       "javascript",
@@ -52,13 +51,14 @@ return {
         settings = {
           classAttributes = { "class", "class.*", ".*Class.*", ".*Class", ".*Style.*" },
           emmetCompletions = true,
-          -- experimental = {
-          --   classRegex = {
-          --     { 'clsx\\(([^)]*)\\)', "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-          --     '(?:enter|leave)(?:From|To)?=\\s*(?:"|\')([^(?:"|\')]*)',
-          --     { 'cva\\(([^)]*)\\)', '["\'`]([^"\'`]*).*?["\'`]' },
-          --   },
-          -- },
+          experimental = {
+            classRegex = {
+              { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+              "(?:enter|leave)(?:From|To)?=\\s*(?:\"|')([^(?:\"|')]*)",
+              { "cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+              { "cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+            },
+          },
           lint = {
             cssConflict = "error",
           },
@@ -66,9 +66,14 @@ return {
       },
       extension = {
         patterns = {
-          typescriptreact = { "cn%(([^)]+)%)", "clsx%(([^)]+)%)", 'cva%({["^"]}%)', "tw%(([^)]+)%)", "tw%`([^`]+)%`" },
-          typescript = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
-          tsx = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
+          -- { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+          -- "(?:enter|leave)(?:From|To)?=\\s*(?:\"|')([^(?:\"|')]*)",
+          -- { "cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+          -- { "cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+          -- typescriptreact = { "clsx%(([^)]+)%)" },
+          -- typescriptreact = { "cn%(([^)]+)%)", "clsx%(([^)]+)%)", 'cva%({["^"]}%)', "tw%(([^)]+)%)", "tw%`([^`]+)%`" },
+          -- typescript = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
+          -- tsx = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
         },
       },
       cmp = {
