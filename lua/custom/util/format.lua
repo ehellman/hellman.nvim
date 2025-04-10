@@ -76,7 +76,7 @@ function M.format(opts)
     if formatter.active then
       done = true
       require("fidget").notify(
-        " " .. formatter.name .. (#buf_formatters > 1 and string.format(" [%d]", idx) or ""),
+        " " .. formatter.name .. (#buf_formatters > 1 and string.format(" [%d]", idx)),
         vim.log.levels.INFO,
         { annote = "hellvim:formatter" }
       )
