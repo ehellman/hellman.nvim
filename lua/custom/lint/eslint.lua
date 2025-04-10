@@ -41,7 +41,8 @@ return {
 
       HellVim.format.register(formatter)
 
-      HellVim.root.packageManager()
+      -- for debugging
+      -- HellVim.root.packageManager()
 
       require("nvim-eslint").setup({
         settings = {

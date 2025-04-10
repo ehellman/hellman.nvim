@@ -197,6 +197,14 @@ function M.git()
   return ret
 end
 
+-- TODO: evaluate if this is useful
+function M.packageManager()
+  local root = M.get()
+  -- local packageJsonRoot = vim.fs.find("package.json", { path = root, upward = false})[1]
+  local packageJsonRoot = vim.fs.find("package.json", { path = root, upward = false })
+  print(vim.inspect(packageJsonRoot))
+end
+
 ---@param opts? {hl_last?: string}
 function M.pretty_path(opts)
   return ""
