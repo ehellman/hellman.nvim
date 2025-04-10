@@ -4,26 +4,10 @@ local M = {}
 M.plugins = {
   -- Shows git changes in the sign column (added/removed/modified lines)
   require("kickstart/plugins/gitsigns"),
-  -- Displays available keybindings in a popup menu
-  require("kickstart/plugins/which-key"),
   -- Fuzzy finder for files, buffers, grep, and more
   require("kickstart/plugins/telescope"),
-  -- Language Server Protocol
-  require("kickstart/plugins/mason"),
-  -- require('kickstart/plugins/lspconfig'),
-  -- Code formatting engine with multi-language support
-  require("kickstart/plugins/conform"),
-  -- Autocompletion plugin with LSP integration
-  require("kickstart/plugins/cmp"),
-  -- Highlight and search TODO/FIXME/NOTE/etc comments
-  require("kickstart/plugins/todo-comments"),
-  -- Collection of minimal, independent UI improvements
-  require("kickstart/plugins/mini"),
   -- Advanced syntax highlighting and code parsing
-  -- require('kickstart/plugins/treesitter'), --TODO: delete
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line', --TODO: delete
-  -- require('kickstart.plugins.lint'), --TODO: delete
   require("kickstart.plugins.neo-tree"),
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
