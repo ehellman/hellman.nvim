@@ -13,6 +13,8 @@ vim.g = vim.g or {}
 vim.g.enable_statusline = true
 vim.g.enable_snacks_picker = true
 vim.g.enable_snacks_animate = true
+vim.g.enable_harpoon = false
+vim.g.enable_arrow = true
 
 vim.g.cmp_variant = "cmp"
 -- vim.g.deprecation_warnings = true
@@ -89,7 +91,9 @@ opt.confirm = true -- Confirm to save changes before exiting modified buffer
 
 -- [[ Performance and Timing ]]
 opt.updatetime = 250 -- Decrease update time
-opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Key sequence wait time
+-- Key sequence wait time, also used for folke/which-key.nvim
+opt.timeoutlen = vim.g.vscode and 1000 or 250
+-- opt.timeoutlen = vim.g.vscode and 1000 or 150
 
 -- [[ File and Buffer Management ]]
 opt.undofile = true -- Save undo history
