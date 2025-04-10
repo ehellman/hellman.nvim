@@ -1,3 +1,9 @@
+local filetypes = {
+  "json",
+  "json5",
+  "jsonc",
+}
+
 ---@type LazySpec
 return {
   {
@@ -6,8 +12,7 @@ return {
   },
   {
     "b0o/SchemaStore.nvim",
-    lazy = true,
-    version = false,
+    ft = filetypes,
   },
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -35,17 +40,12 @@ return {
       formatters_by_ft = {
         json = { "prettierd" },
         jsonc = { "prettierd" },
+        json5 = { "prettierd" },
       },
     },
   },
   {
     "neovim/nvim-lspconfig",
-    -- dependencies = {
-    --   'williamboman/mason.nvim',
-    --   'nvim-treesitter/nvim-treesitter',
-    --   'b0o/SchemaStore.nvim',
-    --   'mfussenegger/nvim-lint',
-    -- },
     opts = {
       -- make sure mason installs the server
       servers = {
@@ -55,6 +55,8 @@ return {
             new_config.settings.json.schemas = new_config.settings.json.schemas or {}
             vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
           end,
+
+          filetypes = filetypes,
           settings = {
             json = {
               format = {
