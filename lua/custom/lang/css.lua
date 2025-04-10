@@ -31,6 +31,27 @@ return {
           },
         },
         cssmodules_ls = {},
+        -- css_variables = {
+        --   settings = {
+        --     cssVariables = {
+        --       blacklistFolders = {
+        --         "**/.cache",
+        --         "**/.DS_Store",
+        --         "**/.git",
+        --         "**/.cache",
+        --         "**/.hg",
+        --         "**/.next",
+        --         "**/.svn",
+        --         "**/bower_components",
+        --         "**/CVS",
+        --         "**/dist",
+        --         "**/node_modules",
+        --         "**/tests",
+        --         "**/tmp",
+        --       },
+        --     },
+        --   },
+        -- },
         tailwindcss = {
           autostart = false,
         },
