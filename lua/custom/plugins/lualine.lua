@@ -1,36 +1,76 @@
 ---@type LazySpec
+---@module 'lualine'
 return {
   "nvim-lualine/lualine.nvim",
-  -- event = {
-  --   'BufReadPost',
-  --   'BufNewFile',
-  --   'BufWritePre',
-  -- },
   event = "VeryLazy",
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
-  -- opts = function(_, optsw
-  --
-  --   return opts
-  -- end,
-  opts = {
-    theme = "catppuccin",
-    sections = {
-      lualine_a = {
-        {
-          "mode",
+  opts = {},
+  config = function(_, opts)
+    local lualine = require("lualine")
+    local lualine_aug = vim.api.nvim_create_augroup("StatusLineWatchRecording", { clear = true })
+    vim.api.nvim_create_autocmd("RecordingEnter", {
+      group = lualine_aug,
+      callback = function()
+        lualine.refresh({ place = { "statusline" } })
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("RecordingLeave", {
+      group = lualine_aug,
+      callback = function()
+        local timer = vim.loop.new_timer()
+        timer:start(50, 0, function()
+          vim.schedule_wrap(function()
+            lualine.refresh({ place = { "statusline" } })
+            timer:stop()
+            timer:close()
+          end)
+        end)
+      end,
+    })
+
+    local function macro_recording_component()
+      local recording_register = vim.fn.reg_recording()
+      if recording_register == "" then
+        return ""
+      end
+      return "recording @" .. recording_register
+    end
+
+    lualine.setup(vim.tbl_deep_extend("force", opts, {
+      theme = "catppuccin",
+      extensions = { "neo-tree", "lazy", "fzf" },
+      options = {
+        disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
+        section_separators = { left = "", right = "" },
+        component_separators = { left = "", right = "" },
+        -- component_separators = { left = '', right = '' },
+        -- section_separators = { left = '', right = '' },
+      },
+      sections = {
+        lualine_a = {
+          {
+            "mode",
+          },
+          {
+            macro_recording_component,
+          },
         },
-      },
-      lualine_b = { "branch", "diff", "diagnostics" },
-      lualine_c = {
-        -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
-        -- {
-        --   harpoon_comp,
-        --   icons_enabled = true,
-        -- },
-      },
-      lualine_x = {
+        lualine_b = {
+          "branch",
+          "diff",
+          "diagnostics",
+        },
+        lualine_c = {
+          -- { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+          -- {
+          --   harpoon_comp,
+          --   icons_enabled = true,
+          -- },
+        },
+        lualine_x = {
           -- stylua: ignore
           -- {
           --   function() return require("noice").api.status.command.get() end,
@@ -55,62 +95,14 @@ return {
             cond = require("lazy.status").has_updates,
             color = function() return { fg = Snacks.util.color("Special") } end,
           },
+        },
+        lualine_y = {
+          { "progress", separator = " ", padding = { left = 1, right = 0 } },
+          { "location", padding = { left = 0, right = 1 } },
+          { "filetype", padding = { left = 1, right = 1 } },
+        },
+        lualine_z = { "hostname" },
       },
-      lualine_y = {
-        { "progress", separator = " ", padding = { left = 1, right = 0 } },
-        { "location", padding = { left = 0, right = 1 } },
-        { "filetype", padding = { left = 1, right = 1 } },
-      },
-      lualine_z = { "hostname" },
-    },
-    extensions = { "neo-tree", "lazy", "fzf" },
-    options = {
-      disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
-      section_separators = { left = "", right = "" },
-      component_separators = { left = "", right = "" },
-      -- component_separators = { left = '', right = '' },
-      -- section_separators = { left = '', right = '' },
-    },
-  },
-  config = function(_, opts)
-    -- local harpoon_comp = function()
-    --   -- simplified version of this https://github.com/letieu/harpoon-lualine
-    --   local options = {
-    --     icon = '󰀱 ',
-    --     indicators = { '1', '2', '3', '4', '5' },
-    --     active_indicators = { '[1]', '[2]', '[3]', '[4]', '[5]' },
-    --     separator = ' ',
-    --   }
-    --   local list = require('harpoon'):list()
-    --   local root_dir = list.config:get_root_dir()
-    --   local current_file_path = vim.api.nvim_buf_get_name(0)
-    --
-    --   local length = math.min(list:length(), #options.indicators)
-    --
-    --   local status = {}
-    --   local get_full_path = function(root, value)
-    --     return root .. vim.g.path_separator .. value
-    --   end
-    --
-    --   for i = 1, length do
-    --     local value = list:get(i).value
-    --     local full_path = get_full_path(root_dir, value)
-    --
-    --     -- if full_path == current_file_path then
-    --     --   table.insert(status, options.active_indicators[i])
-    --     -- else
-    --     --   table.insert(status, options.indicators[i])
-    --     -- end
-    --     if full_path == current_file_path then
-    --       table.insert(status, '%#HarpoonStatuslineActive#' .. options.active_indicators[i] .. '%#Normal#')
-    --     else
-    --       table.insert(status, '%#HarpoonStatuslineInactive#' .. options.indicators[i] .. '%#Normal#')
-    --     end
-    --   end
-    --
-    --   return table.concat(status, options.separator)
-    -- end
-
-    require("lualine").setup(vim.tbl_deep_extend("force", opts, {}))
+    }))
   end,
 }
