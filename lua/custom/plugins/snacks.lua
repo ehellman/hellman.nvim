@@ -41,10 +41,11 @@ return {
       return {
         --stylua: ignore start
         --- Buffers 
+        { '<leader>bD', desc = '[D]elete' },
         { '<leader>bd', function() Snacks.bufdelete.delete() end, desc = '[d]elete' },
-        { '<leader>bdc',function() Snacks.bufdelete.delete() end, desc = '[c]urrent' },
-        { '<leader>bdo', function() Snacks.bufdelete.other() end, desc = '[o]ther than current' },
-        { '<leader>bda', function() Snacks.bufdelete.all() end, desc = '[a]ll' },
+        { '<leader>bDc',function() Snacks.bufdelete.delete() end, desc = '[c]urrent' },
+        { '<leader>bDo', function() Snacks.bufdelete.other() end, desc = '[o]ther than current' },
+        { '<leader>bDa', function() Snacks.bufdelete.all() end, desc = '[a]ll' },
         --
         --- Git/Lazygit
         { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazy[g]it' },
@@ -315,6 +316,7 @@ return {
       spec = {
         { "<leader>sc", group = "[c]ode" },
         { "<leader>ul", group = "[l]ine numbers" },
+        { "<leader>bD", desc = "[D]elete" },
       },
     },
   },

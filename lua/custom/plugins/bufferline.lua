@@ -10,9 +10,9 @@ return {
     },
     keys = {
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "toggle [p]in" },
-      { "<leader>bdp", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "non-[p]inned" },
-      { "<leader>bdr", "<Cmd>BufferLineCloseRight<CR>", desc = "to the [r]ight" },
-      { "<leader>bdl", "<Cmd>BufferLineCloseLeft<CR>", desc = "to the [l]eft" },
+      { "<leader>bDp", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "non-[p]inned" },
+      { "<leader>bDr", "<Cmd>BufferLineCloseRight<CR>", desc = "to the [r]ight" },
+      { "<leader>bDl", "<Cmd>BufferLineCloseLeft<CR>", desc = "to the [l]eft" },
       { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
       { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
       { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "prev +buffer" },
@@ -51,7 +51,6 @@ return {
     end,
     config = function(_, opts)
       require("bufferline").setup(opts)
-
       require("snacks")
         .toggle({
           name = "Bufferline",
