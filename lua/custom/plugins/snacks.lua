@@ -23,6 +23,20 @@ return {
     lazy = false,
     keys = function()
       local Snacks = require("snacks")
+
+      -- snacks toggles
+      Snacks.toggle.scroll():map("<leader>uS")
+      Snacks.toggle.line_number():map("<leader>ull", { desc = "[l]ine numbers" })
+      Snacks.toggle.dim():map("<leader>uD")
+      Snacks.toggle.option("relativenumber"):map("<leader>ulr")
+      Snacks.toggle.zoom():map("<leader>uz")
+      Snacks.toggle.zen():map("<leader>uZ")
+      Snacks.toggle.words():map("<leader>uw")
+      Snacks.toggle.animate():map("<leader>ua")
+      -- .zoom():map("<leader>uD")
+      -- Snacks.toggle.profiler():map("<leader>upp")
+      -- Snacks.toggle.profiler_highlights():map("<leader>uph")
+
       ---@type LazyKeysSpec[]
       return {
         --stylua: ignore start
@@ -35,7 +49,7 @@ return {
         --- Git/Lazygit
         { '<leader>gg', function() Snacks.lazygit() end, desc = 'Lazy[g]it' },
         -- { "<leader>gl", "", desc = "+[l]og"},
-        { '<leader>gl', function() Snacks.picker.git_log() end, desc = '[l]og)' },
+        { '<leader>gl', function() Snacks.picker.git_log() end, desc = '[l]og' },
         -- { '<leader>gll', function() Snacks.picker.git_log() end, desc = 'git [l]og (root)' },
         { '<leader>gli', function() Snacks.picker.git_log_line() end, desc = 'git log l[i]ne' },
         { '<leader>glf', function() Snacks.picker.git_log_file() end, desc = 'git log [F]ile' },
@@ -46,30 +60,29 @@ return {
         { '<leader>gB', function() Snacks.git.blame_line() end, desc = 'git [B]lame Line' },
         --
         --- Search
-        { '<leader>sf', function() picker.open('files') end, desc = 'search [f]iles' }, -- Files
-        { '<leader>sF', function() picker.open('files', { root = false }) end, desc = 'search [F]iles (cwd)' }, -- Files (cwd)
-        { '<leader>sr', function() picker.open('recent') end, desc = 'search [r]ecent' }, -- Recent
-        { '<leader>sR', function() Snacks.picker.registers() end, desc = 'search [R]egisters' }, -- Registers
-        { '<leader>sH', function() Snacks.picker.help() end, desc = 'search [H]elp' }, -- Help
-        { '<leader>sC', function() Snacks.picker.cliphist() end, desc = 'search [C]liphist' }, -- Cliphist
-        { '<leader>s:', function() Snacks.picker.command_history() end, desc = 'search [:]cmd history' }, -- Command History
-        { '<leader>sl', function() Snacks.picker.lines() end, desc = 'search buffer [l]ines' }, -- Lines
+        { '<leader>sf', function() picker.open('files', { hidden = true }) end, desc = '[f]iles' }, -- Files
+        { '<leader>sF', function() picker.open('files', { root = false }) end, desc = '[F]iles (cwd)' }, -- Files (cwd) TODO: this does not work correctly
+        { '<leader>sr', function() picker.open('recent') end, desc = '[r]ecent' }, -- Recent
+        { '<leader>sR', function() Snacks.picker.registers() end, desc = '[R]egisters' }, -- Registers
+        { '<leader>sH', function() Snacks.picker.help() end, desc = '[H]elp' }, -- Help
+        { '<leader>sh', function() Snacks.picker.cliphist() end, desc = 'clip[h]ist' }, -- Cliphist
+        { '<leader>s:', function() Snacks.picker.command_history() end, desc = '[:]cmd history' }, -- Command History
+        { '<leader>sl', function() Snacks.picker.lines() end, desc = 'buffer [l]ines' }, -- Lines
         { '<leader>sg', function() Snacks.picker.grep() end, desc = '[g]rep root dir' }, -- Grep
         { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "grep visual selection or [w]ord", mode = { "n", "x" } }, -- Grep Word
-        { '<leader>sj', function() Snacks.picker.jumps() end, desc = 'search [j]umps' }, -- Jumps
-        { '<leader>sb', function() Snacks.picker.buffers() end, desc = 'search [b]uffers' }, -- Buffers
-        { '<leader>su', function() Snacks.picker.undo() end, desc = 'search [u]ndo tree' }, -- Undo actions
-        { '<leader>sk', function() Snacks.picker.keymaps() end, desc = 'search [k]eymaps' }, -- Keymaps
-        { '<leader>sk', function() Snacks.picker.marks() end, desc = 'search [m]arks' }, -- Marks
+        { '<leader>sj', function() Snacks.picker.jumps() end, desc = '[j]umps' }, -- Jumps
+        { '<leader>sb', function() Snacks.picker.buffers() end, desc = '[b]uffers' }, -- Buffers
+        { '<leader>su', function() Snacks.picker.undo() end, desc = '[u]ndo tree' }, -- Undo actions
+        { '<leader>sk', function() Snacks.picker.keymaps() end, desc = '[k]eymaps' }, -- Keymaps
+        { '<leader>sM', function() Snacks.picker.man() end, desc = '[M]anpages' }, -- Help
+        { '<leader>sm', function() Snacks.picker.marks() end, desc = '[m]arks' }, -- Marks
         { '<leader>r', function() Snacks.picker.resume() end, desc = '[r]esume picker' }, -- Resume / Reopen
         --
         --- Scratch
-        { "<leader>.",  function() Snacks.scratch() end, desc = "toggle scratch buffer" },
-        { "<leader>.s",  function() Snacks.scratch.select() end, desc = "search [s]cratch buffer" },
+        { "<leader>.", function() Snacks.scratch() end, desc = "toggle scratch buffer" },
+        { "<leader>.s", function() Snacks.scratch.select() end, desc = "search [s]cratch buffer" },
         --
         --- Toggles
-        -- { "<leader>ull",  function() Snacks.toggle.line_number() end, desc = "[l]ine numbers" },
-        -- { "<leader>ulr", function() Snacks.toggle.option("relativenumber") end, desc = "[r]elative" },
         --
         --stylua: ignore end
       }
@@ -301,6 +314,7 @@ return {
     opts = {
       spec = {
         { "<leader>sc", group = "[c]ode" },
+        { "<leader>ul", group = "[l]ine numbers" },
       },
     },
   },
