@@ -74,6 +74,7 @@ function M.setup()
     end
     return ret
   end
+
   M.on_attach(M._check_methods)
   M.on_dynamic_capability(M._check_methods)
 end
@@ -256,6 +257,21 @@ function M.execute(opts)
   else
     return vim.lsp.buf_request(0, "workspace/executeCommand", params, opts.handler)
   end
+end
+
+function M.restart_all()
+  HellVim.info("Restarting all LSP servers", { title = "hellvim.lsp" })
+  vim.cmd("LspRestart")
+end
+
+function M.stop_all()
+  HellVim.info("Stopping all LSP servers", { title = "hellvim.lsp" })
+  vim.cmd("LspRestart")
+end
+
+function M.start_all()
+  HellVim.info("Starting LSP servers", { title = "hellvim.lsp" })
+  vim.cmd("LspRestart")
 end
 
 return M

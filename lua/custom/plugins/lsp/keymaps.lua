@@ -13,7 +13,11 @@ function M.get()
   end
   M._keys = {
     -- stylua: ignore start
-    { "<leader>cl", function() Snacks.picker.lsp_config() end, desc = "[L]sp Info" },
+    { "<leader>cli", function() Snacks.picker.lsp_config() end, desc = "[i]nfo" },
+    { "<leader>clr", HellVim.lsp.restart_all, desc = "[r]estart" },
+    { "<leader>clt", HellVim.lsp.stop_all, desc = "s[t]op" },
+    { "<leader>cls", HellVim.lsp.start_all, desc = "[s]tart" },
+    { "<leader>cll", function() vim.cmd("LspLog") end, desc = "[l]og" },
     { "gd", vim.lsp.buf.definition, desc = "goto [D]efinition", has = "definition" },
     { "gr", vim.lsp.buf.references, desc = "goto [R]eferences", nowait = true },
     { "gI", vim.lsp.buf.implementation, desc = "goto [I]mplementation" },
