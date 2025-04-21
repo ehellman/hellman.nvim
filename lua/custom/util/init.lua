@@ -166,7 +166,8 @@ function M.is_tmux_term()
   -- gsub removes \n
   local session_id = result.stdout:gsub("\n", "")
 
-  print(vim.inspect(session_id))
+  -- uncomment to debug session_id
+  -- print(vim.inspect(session_id))
 
   return true, session_id
 end
