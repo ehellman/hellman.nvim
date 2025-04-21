@@ -96,6 +96,28 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
   end,
 })
 
+-- vim.api.nvim_create_autocmd({ "VimResized" }, {
+--   group = augroup("resize_lsp_hover"),
+--   callback = function()
+--     if HellVim.is_loaded("noice.nvim") then
+--       require("noice").setup(vim.tbl_extend("force", {
+--
+--         lsp = {
+--           hover = {
+--             ---@type NoiceViewOptions
+--             opts = {
+--               size = {
+--                 width = math.floor(vim.o.columns * 0.5),
+--                 height = math.floor(vim.o.lines * 0.5),
+--               },
+--             },
+--           },
+--         },
+--       }, HellVim.opts("noice.nvim")))
+--     end
+--   end,
+-- })
+
 -- make it easier to close man-files when opened inline
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("man_unlisted", { clear = true }),
