@@ -1,6 +1,7 @@
 vim.filetype.add({
   extension = { rasi = "rasi", rofi = "rasi", mdx = "markdown" },
   filename = {
+    [".git/ignore"] = "gitignore",
     [".npmignore"] = "ignore",
   },
   pattern = {
