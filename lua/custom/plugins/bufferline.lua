@@ -77,12 +77,4 @@ return {
       })
     end,
   },
-  -- {
-  --   "folke/which-key.nvim",
-  --   opts = {
-  --     spec = {
-  --       { "<leader>bd", group = "+[d]elete" },
-  --     },
-  --   },
-  -- },
 }
