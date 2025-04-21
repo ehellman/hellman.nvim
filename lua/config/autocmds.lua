@@ -147,3 +147,25 @@ vim.api.nvim_create_autocmd("FileType", {
     end)
   end,
 })
+
+-- increase timeoutlen when recording macros
+-- TODO: this needs testing
+vim.api.nvim_create_autocmd("RecordingEnter", {
+  group = augroup("increase_macro_timeout"),
+  callback = function()
+    vim.notify("Recording macro!!")
+    vim.g.original_timeoutlen = vim.opt.timeoutlen
+    vim.opt.timeoutlen = 3000
+    print("Recording macro, timeoutlen set to " .. vim.inspect(vim.opt.timeoutlen))
+  end,
+})
+
+vim.api.nvim_create_autocmd("RecordingLeave", {
+  group = augroup("increase_macro_timeout"),
+  callback = function()
+    vim.notify("Finished recording macro!!")
+    if vim.g.original_timeoutlen then
+      vim.opt.timeoutlen = vim.g.original_timeoutlen
+    end
+  end,
+})
