@@ -42,14 +42,13 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     opts = {
-
       sections = {
         lualine_x = {
           "copilot",
           HellVim.lualine.status(HellVim.config.icons.kinds.Copilot, function()
             local clients = package.loaded["copilot"] and HellVim.lsp.get_clients({ name = "copilot", bufnr = 0 }) or {}
             if #clients > 0 then
-              local status = require("copilot.api").status.data.status
+              local status = require("copilot.status").data.status
               return (status == "InProgress" and "pending") or (status == "Warning" and "error") or "ok"
             end
           end),
@@ -117,25 +116,25 @@ return {
             },
           },
         },
-        -- {
-        --   "saghen/blink.cmp",
-        --   optional = true,
-        --   dependencies = { "giuxtaposition/blink-cmp-copilot" },
-        --   opts = {
-        --     sources = {
-        --       default = { "copilot" },
-        --       providers = {
-        --         copilot = {
-        --           name = "copilot",
-        --           module = "blink-cmp-copilot",
-        --           kind = "Copilot",
-        --           score_offset = 100,
-        --           async = true,
-        --         },
-        --       },
-        --     },
-        --   },
-        -- },
+        {
+          "saghen/blink.cmp",
+          optional = true,
+          dependencies = { "giuxtaposition/blink-cmp-copilot" },
+          opts = {
+            sources = {
+              default = { "copilot" },
+              providers = {
+                copilot = {
+                  name = "copilot",
+                  module = "blink-cmp-copilot",
+                  kind = "Copilot",
+                  score_offset = 100,
+                  async = true,
+                },
+              },
+            },
+          },
+        },
       }
     or nil,
 }
