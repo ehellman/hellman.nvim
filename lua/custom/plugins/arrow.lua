@@ -1,6 +1,5 @@
 if vim.g.enable_arrow then
   HellVim.on_load("which-key.nvim", function()
-    vim.notify("which-key.nvim loaded", vim.log.levels.INFO, { title = "arrow.nvim" })
     vim.schedule(function()
       local wk = require("which-key")
 
