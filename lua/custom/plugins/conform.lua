@@ -17,7 +17,7 @@ return {
       -- Install the conform formatter on VeryLazy
       HellVim.on_very_lazy(function()
         HellVim.format.register({
-          name = "conform.nvim",
+          name = "conform",
           priority = 100,
           primary = true,
           format = function(buf)

@@ -12,7 +12,7 @@ return {
     config = function()
       local formatter = HellVim.lsp.formatter({
         -- name = auto_fix and "eslint: EslintFixAll" or "eslint: lsp",
-        name = "eslint: lsp",
+        name = "eslint:lsp",
         primary = false,
         priority = priority and 50 or 200,
         filter = "eslint",
@@ -82,7 +82,7 @@ return {
 
           local formatter = HellVim.lsp.formatter({
             -- name = auto_fix and "eslint: EslintFixAll" or "eslint: lsp",
-            name = "eslint: lsp",
+            name = "eslint:lsp",
             primary = false,
             priority = priority and 50 or 200,
             filter = "eslint",
