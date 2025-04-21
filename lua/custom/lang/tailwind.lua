@@ -29,27 +29,21 @@ return {
       "scss",
       "html",
     },
-    -- enabled = function()
-    --   -- disable on dashboard and prompt
-    --   return not vim.tbl_contains({ 'snacks_dashboard' }, vim.bo.filetype) and vim.bo.buftype ~= 'prompt' and vim.b.completion ~= false
-    -- end,
-    -- init = function()
-    --   vim.api.nvim_create_autocmd('LspAttach', {
-    --     callback = function(args)
-    --       local client = vim.lsp.get_client_by_id(args.data.client_id)
-    --       if client and client.name == 'tailwindcss' then
-    --         require('tailwind-tools')
-    --         return true
-    --       end
-    --     end,
-    --   })
-    -- end,
     ---@module "tailwind-tools"
     ---@type TailwindTools.Option
     opts = {
       server = {
         settings = {
           classAttributes = { "class", "class.*", ".*Class.*", ".*Class", ".*Style.*" },
+          classFunctions = {
+            "clsx",
+            "classnames",
+            "cva",
+            "cx",
+            "cn",
+            "twMerge",
+            "twJoin",
+          },
           emmetCompletions = true,
           experimental = {
             classRegex = {
@@ -65,11 +59,10 @@ return {
         },
       },
       extension = {
+        -- a list of filetypes having custom `class` queries
+        queries = {},
+        -- a map of filetypes to Lua pattern lists
         patterns = {
-          -- { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-          -- "(?:enter|leave)(?:From|To)?=\\s*(?:\"|')([^(?:\"|')]*)",
-          -- { "cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-          -- { "cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
           -- typescriptreact = { "clsx%(([^)]+)%)" },
           -- typescriptreact = { "cn%(([^)]+)%)", "clsx%(([^)]+)%)", 'cva%({["^"]}%)', "tw%(([^)]+)%)", "tw%`([^`]+)%`" },
           -- typescript = { "clsx%(([^)]+)%)", 'tv%({["^"]}%)', 'cva%({["^"]}%)' },
