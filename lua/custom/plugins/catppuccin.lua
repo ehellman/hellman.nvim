@@ -38,13 +38,12 @@ return {
         -- Harpoon Lualine
         HarpoonStatuslineActive = { fg = colors.lavender },
         HarpoonStatuslineInactive = { fg = colors.overlay0 },
-
         -- Blink
-        BlinkCmpMenu = { bg = colors.base },
+        -- BlinkCmpMenu = { bg = colors.base },
         -- BlinkCmpMenuBorder = { fg = colors.lavender, bg = colors.base },
         -- BlinkCmpMenuSelection = { fg = colors.lavender, bg = colors.base },
-        BlinkCmpScrollBarThumb = { bg = colors.surface1 },
-        BlinkCmpScrollBarGutter = { bg = colors.surface0 },
+        -- BlinkCmpScrollBarThumb = { bg = colors.surface1 },
+        -- BlinkCmpScrollBarGutter = { bg = colors.surface0 },
         -- BlinkCmpLabel = { fg = colors.lavender, bg = colors.base },
         -- BlinkCmpLabelDeprecated = { fg = colors.lavender, bg = colors.base },
         -- BlinkCmpLabelMatch = { fg = colors.lavender, bg = colors.base },

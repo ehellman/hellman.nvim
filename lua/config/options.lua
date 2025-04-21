@@ -16,7 +16,7 @@ vim.g.enable_snacks_animate = true
 vim.g.enable_harpoon = false
 vim.g.enable_arrow = true
 
-vim.g.cmp_variant = "cmp"
+vim.g.cmp_variant = "blink"
 -- vim.g.deprecation_warnings = true
 
 -- copilot suggestions in cmp
