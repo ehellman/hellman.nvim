@@ -146,4 +146,39 @@ function M.enabled(buf)
   return gaf == nil or gaf
 end
 
+function M.is_tmux_term()
+  local term_program = os.getenv("TERM_PROGRAM")
+  if term_program ~= "tmux" then
+    return false, nil
+  end
+
+  local result = vim.system({ "tmux", "display-message", "-p", "#{session_id}" }):wait()
+
+  if result.code ~= 0 then
+    return false, nil
+  end
+
+  if result.stdout == "" then
+    return false, nil
+  end
+
+  -- result.stdout will be something like "$2\n"
+  -- gsub removes \n
+  local session_id = result.stdout:gsub("\n", "")
+
+  print(vim.inspect(session_id))
+
+  return true, session_id
+end
+
+function M.is_kitty_terminal()
+  local term = os.getenv("TERM")
+  local kitty_pid = os.getenv("KITTY_PID")
+
+  local is_kitty = term == "xterm-kitty"
+  local is_tmux, tmux_session_id = M.is_tmux_term()
+  local is_tmux_inside_kitty = is_tmux and kitty_pid ~= nil
+  return term == is_kitty or is_tmux_inside_kitty
+end
+
 return M

@@ -4,43 +4,8 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("hellvim_" .. name, { clear = true })
 end
 
-local function is_tmux_term()
-  local term_program = os.getenv("TERM_PROGRAM")
-  if term_program ~= "tmux" then
-    return false, nil
-  end
-
-  local result = vim.system({ "tmux", "display-message", "-p", "#{session_id}" }):wait()
-
-  if result.code ~= 0 then
-    return false, nil
-  end
-
-  if result.stdout == "" then
-    return false, nil
-  end
-
-  -- result.stdout will be something like "$2\n"
-  -- gsub removes \n
-  local session_id = result.stdout:gsub("\n", "")
-
-  print(vim.inspect(session_id))
-
-  return true, session_id
-end
-
-local function is_kitty_terminal()
-  local term = os.getenv("TERM")
-  local kitty_pid = os.getenv("KITTY_PID")
-
-  local is_kitty = term == "xterm-kitty"
-  local is_tmux, tmux_session_id = is_tmux_term()
-  local is_tmux_inside_kitty = is_tmux and kitty_pid ~= nil
-  return term == is_kitty or is_tmux_inside_kitty
-end
-
 -- disable kitty spacing
-if is_kitty_terminal() then
+if HellVim.is_kitty_terminal() then
   -- vim.notify("inside kitty term, trimming padding", vim.log.levels.DEBUG, { title = "autocmds:kitty" })
   vim.cmd("silent !kitty @ --to=$KITTY_LISTEN_ON set-spacing padding=0")
   vim.opt.termguicolors = true
