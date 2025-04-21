@@ -1,0 +1,69 @@
+local filetypes = { "yaml.az-pl" }
+---@type LazySpec
+return {
+  -- {
+  --   "b0o/SchemaStore.nvim",
+  --   ft = filetypes,
+  --   lazy = true,
+  --   version = false,
+  -- },
+  -- {
+  --   "WhoIsSethDaniel/mason-tool-installer.nvim",
+  --   opts = {
+  --     ensure_installed = {
+  --       "",
+  --       "yamllint",
+  --       "yamlfmt",
+  --       "prettierd",
+  --     },
+  --   },
+  -- },
+  -- {
+  --   "mfussenegger/nvim-lint",
+  --   opts = {
+  --     linters_by_ft = {
+  --       yaml = { "yamllint" },
+  --       github = { "actionlint" },
+  --     },
+  --   },
+  -- },
+  -- {
+  --   "stevearc/conform.nvim",
+  --   ---@module "conform"
+  --   ---@type conform.setupOpts
+  --   opts = {
+  --     formatters_by_ft = {
+  --       yaml = { "prettierd", "yamlfmt", stop_after_first = true },
+  --     },
+  --   },
+  -- },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = {
+  --     servers = {
+  --       azure_pipelines_ls = {
+  --         filetypes = filetypes,
+  --         settings = {
+  --           yaml = {
+  --             schemas = {
+  --               ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
+  --                 description = "Azure Pipelines",
+  --                 fileMatch = { ".azdo/*.{yml.yaml}" },
+  --               },
+  --             },
+  --           },
+  --         },
+  --         -- settings = {
+  --         -- schemaStore = {
+  --         --   -- Must disable built-in schemaStore support to use
+  --         --   -- schemas from SchemaStore.nvim plugin
+  --         --   enable = false,
+  --         --   -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+  --         --   url = "",
+  --         -- },
+  --         -- },
+  --       },
+  --     },
+  --   },
+  -- },
+}
