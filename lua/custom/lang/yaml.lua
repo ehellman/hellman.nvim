@@ -1,32 +1,50 @@
+local filetypes = {
+  "yaml",
+  "yaml.gl-ci",
+  "yaml.gh-action",
+  "yaml.az-pl",
+  "yaml.docker-compose",
+}
 ---@type LazySpec
 return {
   {
-    'b0o/SchemaStore.nvim',
-    lazy = true,
+    "b0o/SchemaStore.nvim",
+    ft = filetypes,
     version = false,
   },
 
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        'yamlls',
-        'yamllint',
-        'yamlfmt',
+        "yamlls",
+        "yamllint",
+        "yamlfmt",
+        "prettierd",
       },
     },
   },
   {
-    'mfussenegger/nvim-lint',
+    "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
-        yaml = { 'yamllint' },
-        github = { 'actionlint' },
+        yaml = { "yamllint" },
+        github = { "actionlint" },
       },
     },
   },
   {
-    'neovim/nvim-lspconfig',
+    "stevearc/conform.nvim",
+    ---@module "conform"
+    ---@type conform.setupOpts
+    opts = {
+      formatters_by_ft = {
+        yaml = { "prettierd", "yamlfmt", stop_after_first = true },
+      },
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
     opts = {
       servers = {
         yamlls = {
@@ -41,7 +59,11 @@ return {
           },
           -- lazy-load schemastore when needed
           on_new_config = function(new_config)
-            new_config.settings.yaml.schemas = vim.tbl_deep_extend('force', new_config.settings.yaml.schemas or {}, require('schemastore').yaml.schemas())
+            new_config.settings.yaml.schemas = vim.tbl_deep_extend(
+              "force",
+              new_config.settings.yaml.schemas or {},
+              require("schemastore").yaml.schemas()
+            )
           end,
           settings = {
             redhat = { telemetry = { enabled = false } },
@@ -56,7 +78,23 @@ return {
                 -- schemas from SchemaStore.nvim plugin
                 enable = false,
                 -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                url = '',
+                url = "",
+              },
+            },
+          },
+        },
+        azure_pipelines_ls = {
+          filetypes = { "yaml", "yaml.az-pl" },
+          settings = {
+            yaml = {
+              schemas = {
+                ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json"] = {
+                  "/azure-pipeline*.y*l",
+                  "/*.azure*",
+                  "Azure-Pipelines/**/*.y*l",
+                  "pipelines/*.y*l",
+                  "Pipelines/*.y*l",
+                },
               },
             },
           },
