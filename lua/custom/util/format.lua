@@ -75,11 +75,22 @@ function M.format(opts)
   for idx, formatter in ipairs(buf_formatters) do
     if formatter.active then
       done = true
-      require("fidget").notify(
-        " " .. formatter.name .. (#buf_formatters > 1 and string.format(" [%d]", idx)),
-        vim.log.levels.INFO,
-        { annote = "hellvim:formatter" }
-      )
+      -- loop through formatter.resolved to get the resolved formatters
+      -- and notify the user
+      -- if there are multiple formatters, show the index
+      for jdx, resolved in ipairs(formatter.resolved) do
+        require("fidget").notify(
+          " "
+            .. formatter.name
+            .. "("
+            .. resolved
+            .. ")"
+            .. (#buf_formatters > 1 and string.format(" [%d]", idx) or "")
+            .. (#formatter.resolved > 1 and string.format(":[%d]", jdx) or ""),
+          vim.log.levels.INFO,
+          { annote = "hellvim:format" }
+        )
+      end
 
       HellVim.try(function()
         return formatter.format(buf)
