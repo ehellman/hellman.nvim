@@ -127,8 +127,32 @@ opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- [[ Path and Environment Setup ]]
 -- Configure path for mason.nvim binaries
-vim.env.PATH = table.concat({ vim.fn.stdpath("data"), "mason", "bin" }, vim.g.path_separator)
-  .. vim.g.delimiter
-  .. vim.env.PATH
+-- vim.env.PATH = table.concat({ vim.fn.stdpath("data"), "mason", "bin" }, vim.g.path_separator)
+--   -- .. vim.g.delimiter
+--   -- .. table.concat({
+--   --   vim.env.HOME,
+--   --   ".local",
+--   --   "share",
+--   --   "mise",
+--   --   "shims",
+--   -- }, vim.g.path_separator)
+--   .. vim.g.delimiter
+--   .. vim.env.PATH
+
+local mason_bin_path = vim.fn.stdpath("data") .. vim.g.path_separator .. "mason" .. vim.g.path_separator .. "bin"
+local mise_shims_path = table.concat({ vim.env.HOME, ".local", "share", "mise", "shims" }, vim.g.path_separator)
+
+vim.env.PATH = mason_bin_path .. vim.g.delimiter .. mise_shims_path .. vim.g.delimiter .. vim.env.PATH
+-- vim.env.PATH = table.concat({ vim.fn.stdpath("data"), "mason", "bin" }, vim.g.path_separator)
+-- .. vim.g.delimiter
+-- .. table.concat({
+--   vim.env.HOME,
+--   ".local",
+--   "share",
+--   "mise",
+--   "shims",
+-- }, vim.g.path_separator)
+-- .. vim.g.delimiter
+-- .. vim.env.PATH
 
 -- vim: ts=2 sts=2 sw=2 et
