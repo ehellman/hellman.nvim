@@ -110,6 +110,8 @@ vim.keymap.set("n", "<leader>Wd", "<C-W>c", { desc = "[d]elete window", remap = 
 -- highlights under cursor
 vim.keymap.set("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
 vim.keymap.set("n", "<leader>uI", "<cmd>InspectTree<cr>", { desc = "Inspect Tree" })
+vim.keymap.set("n", "<leader>ukP", "<cmd>KittyPaddingOn<cr>", { desc = "kitty [P]adding on" })
+vim.keymap.set("n", "<leader>ukp", "<cmd>KittyPaddingOff<cr>", { desc = "kitty [p]adding off" })
 
 -- native snippets. only needed on < 0.11, as 0.11 creates these by default
 -- (makes sure tab/shift-tab work is expected with snippet)

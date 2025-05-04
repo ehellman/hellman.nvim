@@ -13,10 +13,18 @@ if HellVim.is_kitty_terminal() then
     pattern = { "*" },
     command = "silent !kitty @ --to=$KITTY_LISTEN_ON set-spacing padding=default",
   })
-  -- else
-  --   vim.schedule(function()
-  --     vim.notify("not inside kitty term", vim.log.levels.DEBUG, { title = "autocmds:kitty" })
-  --   end)
+end
+
+if HellVim.is_kitty_terminal() then
+  vim.api.nvim_create_user_command("KittyPaddingOff", function()
+    vim.cmd("silent !kitty @ --to=$KITTY_LISTEN_ON set-spacing padding=0")
+    vim.notify("Kitty padding disabled", vim.log.levels.INFO, { title = "Kitty" })
+  end, { desc = "Disable Kitty terminal padding" })
+
+  vim.api.nvim_create_user_command("KittyPaddingOn", function()
+    vim.cmd("silent !kitty @ --to=$KITTY_LISTEN_ON set-spacing padding=default")
+    vim.notify("Kitty padding enabled", vim.log.levels.INFO, { title = "Kitty" })
+  end, { desc = "Enable Kitty terminal padding" })
 end
 
 -- Check if we need to reload the file when it changed
