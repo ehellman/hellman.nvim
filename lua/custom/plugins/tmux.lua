@@ -10,11 +10,12 @@ return {
       tmux.setup({
         copy_sync = {
           enable = true, -- sync clipboard through tmux
+          -- TMUX >= 3.2: all yanks (and deletes) will get redirected to system
+          -- clipboard by tmux
+          redirect_to_clipboard = true, -- defaults to false
         },
         navigation = {
-          cycle_navigation = false,
           enable_default_keybindings = false,
-          persist_zoom = true,
         },
         resize = {
           enable_default_keybindings = false,
