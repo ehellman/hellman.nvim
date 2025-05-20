@@ -259,10 +259,10 @@ return {
     --   "BufWritePre",
     -- },
     dependencies = {
-      "mason.nvim",
-      -- 'williamboman/mason.nvim',
+      -- "mason.nvim",
+      "mason-org/mason.nvim",
       --TODO: difference between 2 below?
-      { "williamboman/mason-lspconfig.nvim", config = function() end },
+      { "mason-org/mason.nvim", config = function() end },
 
       -- bottom right status updates for LSP
       { "j-hui/fidget.nvim", opts = {} },
@@ -513,7 +513,7 @@ return {
     --   'MasonToolsUpdateSync',
     --   'MasonToolsClean',
     -- },
-    dependencies = { "williamboman/mason-lspconfig.nvim" },
+    dependencies = { "mason-org/mason.nvim" },
     opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {},
@@ -586,9 +586,9 @@ return {
     end,
   },
   -- {
-  --   'williamboman/mason-lspconfig.nvim',
+  --   'mason-org/mason-lspconfig.nvim',
   --   -- dependencies = {
-  --   --   'williamboman/mason-lspconfig.nvim',
+  --   --   'mason-org/mason-lspconfig.nvim',
   --   --   'WhoIsSethDaniel/mason-tool-installer.nvim',
   --   -- },
   --   -- opts_extend = { 'ensure_installed' },
@@ -605,12 +605,12 @@ return {
   --   end,
   -- },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     cmd = "Mason",
     keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
     -- dependencies = {
-    --   'williamboman/mason-lspconfig.nvim',
+    --   'mason-org/mason-lspconfig.nvim',
     --   'WhoIsSethDaniel/mason-tool-installer.nvim',
     -- },
     opts_extend = { "ensure_installed", "registries" },

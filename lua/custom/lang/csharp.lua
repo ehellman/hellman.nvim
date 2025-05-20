@@ -28,7 +28,7 @@ return {
       {
         -- "WhoIsSethDaniel/mason-tool-installer.nvim",
         -- has to be installed using mason.nvim because roslyn is not in the mason registry yet, but uses a custom registry
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         opts = {
           ensure_installed = {
             "roslyn",

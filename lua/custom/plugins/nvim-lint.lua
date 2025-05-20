@@ -4,8 +4,8 @@ return {
   "mfussenegger/nvim-lint",
   event = "LazyFile", --TODO: not needed?
   dependencies = {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason.nvim",
+    "mason-org/mason-lspconfig.nvim",
   },
   -- opts_extend = { 'linters_by_ft', 'linters' },
   ---@class PluginLintOpts
