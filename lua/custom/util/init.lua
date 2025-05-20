@@ -9,6 +9,7 @@ local LazyUtil = require("lazy.core.util")
 ---@field lualine hellvim.util.lualine
 ---@field mini hellvim.util.mini
 ---@field root hellvim.util.root
+---@field copilot hellvim.util.copilot
 local M = {}
 
 setmetatable(M, {
