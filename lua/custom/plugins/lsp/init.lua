@@ -251,8 +251,9 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    -- event = 'VeryLazy',
-    event = "LazyFile",
+    -- TODO: VeryLazy should not be needed, but without it, initial file open does not work, second file open works.
+    event = "VeryLazy",
+    -- event = "LazyFile",
     -- event = {
     --   "BufReadPost",
     --   "BufNewFile",
