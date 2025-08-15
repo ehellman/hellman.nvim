@@ -7,6 +7,7 @@
 ---  enable_snacks_picker: boolean,
 ---  enable_snacks_animate: boolean,
 ---  cmp_variant: "blink" | "cmp",
+---  ts_tools: boolean,
 ---  other_setting: string,
 ---}
 vim.g = vim.g or {}
@@ -15,6 +16,7 @@ vim.g.enable_snacks_picker = true
 vim.g.enable_snacks_animate = true
 vim.g.enable_harpoon = false
 vim.g.enable_arrow = true
+vim.g.ts_tools = true
 
 vim.g.cmp_variant = "blink"
 -- vim.g.deprecation_warnings = true
