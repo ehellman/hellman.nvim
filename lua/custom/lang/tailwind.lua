@@ -84,31 +84,6 @@ return {
     },
   },
   {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        tailwindcss = {
-          filetypes_include = {},
-          filetypes_exclude = { "markdown" },
-        },
-      },
-    },
-    setup = {
-      tailwindcss = function(_, opts)
-        local tw = require("lspconfig.configs.tailwindcss")
-
-        -- Add default filetypes
-        vim.list_extend(opts.filetypes, tw.default_config.filetypes)
-
-        -- Remove excluded filetypes
-        --- @param ft string
-        opts.filetypes = vim.tbl_filter(function(ft)
-          return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
-        end, opts.filetypes)
-      end,
-    },
-  },
-  {
     "hrsh7th/nvim-cmp",
     optional = true,
     dependencies = {
