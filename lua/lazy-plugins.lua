@@ -30,7 +30,7 @@ function M.load(opts)
       version = false, -- always use latest git commit
     },
     install = {
-      colorscheme = { "catppuccin", "habamax" },
+      colorscheme = { "catppuccin", "tokyonight", "habamax" },
     },
     -- checker = {
     --   enabled = true,
