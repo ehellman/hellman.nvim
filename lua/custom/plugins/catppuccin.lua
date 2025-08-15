@@ -2,7 +2,9 @@
 return {
   "catppuccin/nvim",
   name = "catppuccin",
-  version = false,
+  version = "1.10.0",
+  enabled = false,
+  -- version = false,
   priority = 1000,
   init = function()
     -- set colorscheme
