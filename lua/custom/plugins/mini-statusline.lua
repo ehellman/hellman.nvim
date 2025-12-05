@@ -2,7 +2,7 @@
 return {
   {
     -- Simple and easy statusline.
-    "echasnovski/mini.statusline",
+    "nvim-mini/mini.statusline",
     version = false,
     enabled = false,
     event = "VeryLazy",

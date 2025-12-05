@@ -1,6 +1,6 @@
 ---@type LazySpec
 return {
-  "echasnovski/mini.pairs",
+  "nvim-mini/mini.pairs",
   version = false,
   event = "LazyFile",
   -- event = 'VeryLazy',

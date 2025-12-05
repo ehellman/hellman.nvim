@@ -1,6 +1,6 @@
 ---@type LazySpec
 return {
-  "echasnovski/mini.surround",
+  "nvim-mini/mini.surround",
   version = false,
   -- Add/delete/replace surroundings (brackets, quotes, etc.)
   --

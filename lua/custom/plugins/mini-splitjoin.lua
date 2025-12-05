@@ -8,7 +8,7 @@ local square = { brackets = { "%b[]" } }
 return {
   {
     ---@module 'mini.splitjoin'
-    "echasnovski/mini.splitjoin",
+    "nvim-mini/mini.splitjoin",
     version = false,
     -- dependencies = {},
     -- opts = function()
