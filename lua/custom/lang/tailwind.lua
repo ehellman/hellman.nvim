@@ -11,6 +11,31 @@ return {
     },
   },
   {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        tailwindcss = {
+          settings = {
+            tailwindCSS = {
+              classAttributes = { "class", "class.*", ".*Class.*", ".*Class", ".*Style.*" },
+              experimental = {
+                classRegex = {
+                  { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  "(?:enter|leave)(?:From|To)?=\\s*(?:\"|')([^(?:\"|')]*)",
+                  { "cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                  { "cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                },
+              },
+              lint = {
+                cssConflict = "error",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "luckasRanarison/tailwind-tools.nvim",
     name = "tailwind-tools",
     lazy = true,
@@ -33,6 +58,7 @@ return {
     ---@type TailwindTools.Option
     opts = {
       server = {
+        override = false, -- Don't use lspconfig (deprecated), configure LSP separately
         settings = {
           classAttributes = { "class", "class.*", ".*Class.*", ".*Class", ".*Style.*" },
           classFunctions = {
