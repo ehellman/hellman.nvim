@@ -19,7 +19,7 @@ return {
       })
 
       -- local function get_client(buf)
-      --   return HellVim.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+      --   return vim.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
       -- end
       -- Use EslintFixAll on Neovim < 0.10.0
       -- if not pcall(require, "vim.lsp._dynamic") then
@@ -77,7 +77,7 @@ return {
           end
 
           local function get_client(buf)
-            return HellVim.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+            return vim.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
           end
 
           local formatter = HellVim.lsp.formatter({

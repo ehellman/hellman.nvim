@@ -1,26 +1,6 @@
 ---@class hellvim.util.lsp
 local M = {}
 
----@alias lsp.Client.filter {id?: number, bufnr?: number, name?: string, method?: string, filter?:fun(client: lsp.Client):boolean}
-
----@param opts? lsp.Client.filter
-function M.get_clients(opts)
-  local ret = {} ---@type vim.lsp.Client[]
-  if vim.lsp.get_clients then
-    ret = vim.lsp.get_clients(opts)
-  else
-    ---@diagnostic disable-next-line: deprecated
-    ret = vim.lsp.get_active_clients(opts)
-    if opts and opts.method then
-      ---@param client vim.lsp.Client
-      ret = vim.tbl_filter(function(client)
-        return client.supports_method(opts.method, { bufnr = opts.bufnr })
-      end, ret)
-    end
-  end
-  return opts and opts.filter and vim.tbl_filter(opts.filter, ret) or ret
-end
-
 ---@param on_attach fun(client:vim.lsp.Client, buffer)
 ---@param name? string
 function M.on_attach(on_attach, name)
@@ -154,11 +134,11 @@ function M.formatter(opts)
       M.format(HellVim.merge({}, filter, { bufnr = buf }))
     end,
     sources = function(buf)
-      local clients = M.get_clients(HellVim.merge({}, filter, { bufnr = buf }))
+      local clients = vim.lsp.get_clients(HellVim.merge({}, filter, { bufnr = buf }))
       ---@param client vim.lsp.Client
       local ret = vim.tbl_filter(function(client)
-        return client.supports_method("textDocument/formatting")
-          or client.supports_method("textDocument/rangeFormatting")
+        return client:supports_method("textDocument/formatting")
+          or client:supports_method("textDocument/rangeFormatting")
       end, clients)
       ---@param client vim.lsp.Client
       return vim.tbl_map(function(client)
