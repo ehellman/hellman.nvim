@@ -3,6 +3,7 @@ return {
   ---@module 'noice'
   "folke/noice.nvim",
   event = "VeryLazy",
+  version = false,
   dependencies = {
     "MunifTanjim/nui.nvim",
     -- OPTIONAL:
@@ -178,5 +179,18 @@ return {
     end
 
     require("noice").setup(opts)
+
+    -- HACK: Filter out Roslyn LSP progress notifications that have nil tokens
+    -- Roslyn doesn't properly implement the LSP spec for $/progress (dotnet/roslyn#79939)
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "cs" },
+      callback = function()
+        vim.api.nvim_clear_autocmds({
+          group = "noice_lsp_progress",
+          event = "LspProgress",
+          pattern = "*",
+        })
+      end,
+    })
   end,
 }
