@@ -8,6 +8,7 @@ return {
         "cssmodules_ls",
         "prettierd",
         "tailwindcss",
+        "some-sass-language-server",
       },
     },
   },
@@ -55,6 +56,7 @@ return {
         tailwindcss = {
           autostart = false,
         },
+        somesass_ls = {},
       },
     },
   },
