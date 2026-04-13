@@ -1,65 +1,106 @@
 ---@type LazySpec
 return {
-  {
-    'nvimtools/none-ls.nvim',
-    enabled = false,
-    event = { 'BufReadPre', 'BufNewFile' },
-    -- event = 'VeryLazy',
-    dependencies = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      local null_ls = require('null-ls')
-
-      null_ls.setup({
-        sources = {
-          -- JavaScript, TypeScript
-          null_ls.builtins.diagnostics.eslint_d, -- Linting
-          null_ls.builtins.code_actions.eslint, -- Auto-fixes
-          null_ls.builtins.formatting.prettierd.with({
-            filetypes = { 'css', 'yml', 'yaml', 'toml' },
-            -- args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
-          }),
-          -- Python
-          null_ls.builtins.diagnostics.flake8, -- Linting
-          null_ls.builtins.formatting.black, -- Formatting (PEP 8)
-          null_ls.builtins.formatting.isort, -- Sort imports
-
-          -- Rust
-          null_ls.builtins.formatting.rustfmt, -- Formatting
-
-          -- Go
-          null_ls.builtins.formatting.gofmt, -- Formatting
-          null_ls.builtins.formatting.goimports, -- Auto-imports
-
-          -- C#
-          null_ls.builtins.formatting.csharpier, -- Formatting
-
-          -- CSS, SCSS
-          null_ls.builtins.diagnostics.stylelint, -- Linting
-
-          -- Lua
-          null_ls.builtins.formatting.stylua, -- Formatting for Lua
-          null_ls.builtins.diagnostics.luacheck, -- Linting for Lua (requires luarocks)
-
-          -- Shell scripting (Bash, Zsh, Sh)
-          --  Linting for shell scripts
-          null_ls.builtins.diagnostics.shellcheck,
-          --  Formatting for Bash/Zsh
-          null_ls.builtins.formatting.shfmt,
-
-          -- General
-          null_ls.builtins.formatting.trim_whitespace, -- Remove trailing whitespace
-          null_ls.builtins.formatting.trim_newlines, -- Remove extra newlines
-        },
-      })
-
-      -- Autoformat on save
-      local format_augroup = vim.api.nvim_create_augroup('LspFormatting', { clear = true })
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        group = format_augroup,
-        callback = function()
-          vim.lsp.buf.format({ async = false })
-        end,
-      })
-    end,
-  },
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   event = "LazyFile",
+  --   dependencies = { "mason.nvim" },
+  --   init = function()
+  --     HellVim.on_very_lazy(function()
+  --       -- register the formatter with LazyVim
+  --       HellVim.format.register({
+  --         name = "none-ls.nvim",
+  --         priority = 200, -- set higher than conform, the builtin formatter
+  --         primary = true,
+  --         format = function(buf)
+  --           return HellVim.lsp.format({
+  --             bufnr = buf,
+  --             filter = function(client)
+  --               return client.name == "null-ls"
+  --             end,
+  --           })
+  --         end,
+  --         sources = function(buf)
+  --           local ret = require("null-ls.sources").get_available(vim.bo[buf].filetype, "NULL_LS_FORMATTING") or {}
+  --           return vim.tbl_map(function(source)
+  --             return source.name
+  --           end, ret)
+  --         end,
+  --       })
+  --     end)
+  --   end,
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.root_dir = opts.root_dir
+  --       or require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
+  --     opts.sources = vim.list_extend(opts.sources or {}, {
+  --       nls.builtins.formatting.fish_indent,
+  --       nls.builtins.diagnostics.fish,
+  --       nls.builtins.formatting.stylua,
+  --       nls.builtins.formatting.shfmt,
+  --     })
+  --   end,
+  -- },
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   -- enabled = false,
+  --   event = { "BufReadPre", "BufNewFile" },
+  --   -- event = 'VeryLazy',
+  --   dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" },
+  --   config = function()
+  --     local null_ls = require("null-ls")
+  --
+  --     null_ls.setup({
+  --       sources = {
+  --         -- JavaScript, TypeScript
+  --         -- null_ls.builtins.diagnostics.eslint_d, -- Linting
+  --         require("none-ls.diagnostics.eslint"), -- Linting
+  --         require("none-ls.code_actions.eslint"), -- Auto-fixes
+  --         -- null_ls.builtins.formatting.prettierd.with({
+  --         --   filetypes = { "css", "yml", "yaml", "toml" },
+  --         --   -- args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
+  --         -- }),
+  --         -- Python
+  --         -- null_ls.builtins.diagnostics.flake8, -- Linting
+  --         -- null_ls.builtins.formatting.black, -- Formatting (PEP 8)
+  --         -- null_ls.builtins.formatting.isort, -- Sort imports
+  --
+  --         -- Rust
+  --         -- null_ls.builtins.formatting.rustfmt, -- Formatting
+  --
+  --         -- Go
+  --         -- null_ls.builtins.formatting.gofmt, -- Formatting
+  --         -- null_ls.builtins.formatting.goimports, -- Auto-imports
+  --
+  --         -- C#
+  --         null_ls.builtins.formatting.csharpier, -- Formatting
+  --
+  --         -- CSS, SCSS
+  --         null_ls.builtins.diagnostics.stylelint, -- Linting
+  --
+  --         -- Lua
+  --         null_ls.builtins.formatting.stylua, -- Formatting for Lua
+  --         null_ls.builtins.diagnostics.luacheck, -- Linting for Lua (requires luarocks)
+  --
+  --         -- Shell scripting (Bash, Zsh, Sh)
+  --         --  Linting for shell scripts
+  --         null_ls.builtins.diagnostics.shellcheck,
+  --         --  Formatting for Bash/Zsh
+  --         null_ls.builtins.formatting.shfmt,
+  --
+  --         -- General
+  --         null_ls.builtins.formatting.trim_whitespace, -- Remove trailing whitespace
+  --         null_ls.builtins.formatting.trim_newlines, -- Remove extra newlines
+  --       },
+  --     })
+  --
+  --     -- Autoformat on save
+  --     -- local format_augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
+  --     -- vim.api.nvim_create_autocmd("BufWritePre", {
+  --     --   group = format_augroup,
+  --     --   callback = function()
+  --     --     vim.lsp.buf.format({ async = false })
+  --     --   end,
+  --     -- })
+  --   end,
+  -- },
 }

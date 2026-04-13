@@ -2,6 +2,7 @@
 return {
   ---@module 'lint'
   "mfussenegger/nvim-lint",
+  -- enabled = false,
   event = "LazyFile", --TODO: not needed?
   dependencies = {
     "mason-org/mason.nvim",
