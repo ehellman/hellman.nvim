@@ -1,6 +1,14 @@
 ---@type LazySpec
 return {
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    opts = {
+      ensure_installed = {
+        "copilot-language-server",
+      },
+    },
+  },
+  {
     "copilotlsp-nvim/copilot-lsp",
     event = "VeryLazy",
     dependencies = {
