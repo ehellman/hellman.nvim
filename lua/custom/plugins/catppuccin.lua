@@ -2,17 +2,13 @@
 return {
   "catppuccin/nvim",
   name = "catppuccin",
-  version = "1.10.0",
+  version = false,
   enabled = true,
-  -- version = false,
+  lazy = false,
   priority = 1000,
-  init = function()
-    vim.cmd([[colorscheme catppuccin]])
-  end,
   ---@module "catppuccin"
   ---@type CatppuccinOptions
   opts = {
-    compile_path = vim.fn.stdpath("cache") .. "/nvim/catppuccin",
     flavour = "mocha",
     no_italic = true,
     term_colors = false,
@@ -35,20 +31,20 @@ return {
         overlay0 = "#444444",
 
         -- Syntax colors (GitHub Dark approach: high sat + high lightness for black bg)
-        lavender = "#ffffff",    -- variables, UI borders
-        mauve = "#d2a8ff",       -- keywords: bright purple (GitHub Dark)
-        pink = "#d2a8ff",        -- keyword.function: match mauve (unified keyword color)
-        blue = "#79c0ff",        -- functions: sky blue (GitHub Dark)
-        sapphire = "#56b3ff",    -- constructors: deeper blue
-        sky = "#7dcfff",         -- operators: light cyan
-        teal = "#7ee8d4",        -- type builtins: bright seafoam
-        green = "#7ee787",       -- strings: bright green (GitHub Dark)
-        yellow = "#ffd580",      -- types: warm gold
-        peach = "#ffa657",       -- numbers: orange (GitHub Dark)
-        rosewater = "#ffcb8b",   -- markup: warm tan
-        flamingo = "#ffa198",    -- brackets: soft coral
-        red = "#ff7b72",         -- errors: salmon (GitHub Dark)
-        maroon = "#f47067",      -- error accents (GitHub Dark)
+        lavender = "#ffffff", -- variables, UI borders
+        mauve = "#d2a8ff", -- keywords: bright purple (GitHub Dark)
+        pink = "#d2a8ff", -- keyword.function: match mauve (unified keyword color)
+        blue = "#79c0ff", -- functions: sky blue (GitHub Dark)
+        sapphire = "#56b3ff", -- constructors: deeper blue
+        sky = "#7dcfff", -- operators: light cyan
+        teal = "#7ee8d4", -- type builtins: bright seafoam
+        green = "#7ee787", -- strings: bright green (GitHub Dark)
+        yellow = "#ffd580", -- types: warm gold
+        peach = "#ffa657", -- numbers: orange (GitHub Dark)
+        rosewater = "#ffcb8b", -- markup: warm tan
+        flamingo = "#ffa198", -- brackets: soft coral
+        red = "#ff7b72", -- errors: salmon (GitHub Dark)
+        maroon = "#f47067", -- error accents (GitHub Dark)
       },
     },
     custom_highlights = function(colors)
@@ -175,4 +171,8 @@ return {
       notify = true,
     },
   },
+  config = function(_, opts)
+    require("catppuccin").setup(opts)
+    vim.cmd.colorscheme("catppuccin-nvim")
+  end,
 }

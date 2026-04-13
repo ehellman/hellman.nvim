@@ -24,7 +24,7 @@ return {
       opts = opts or {}
 
       if (vim.g.colors_name or ""):find("catppuccin") then
-        opts.highlights = require("catppuccin.groups.integrations.bufferline").get()
+        opts.highlights = require("catppuccin.special.bufferline").get_theme()()
       end
 
       opts.options = opts.options or {}
