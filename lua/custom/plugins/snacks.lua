@@ -296,20 +296,21 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    opts = function()
-      local Keys = require("custom.plugins.lsp.keymaps").get()
-      vim.list_extend(Keys, {
-        -- stylua: ignore start
-        { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'goto [d]efinition', has = 'definition' },
-        { 'gr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'goto [r]eferences' },
-        { 'gI', function() Snacks.picker.lsp_implementations() end, desc = 'goto [I]mplementation' },
-        { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'goto t[y]pe definition' },
-        -- { '<leader>csd', function() Snacks.picker.lsp_symbols() end, desc = '[D]ocument Symbols' },
-        { '<leader>scd', function() Snacks.picker.lsp_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[d]ocument symbols',has = 'documentSymbol'  },
-        { '<leader>scw', function() Snacks.picker.lsp_workspace_symbols({ filter = HellVim.config.kind_filter }) end, desc = '[w]orkspace symbols',has = 'workspace/symbols'  },
-        -- stylua: ignore end
-      })
-    end,
+    opts = {
+      servers = {
+        ["*"] = {
+          -- stylua: ignore
+          keys = {
+            { "gd", function() Snacks.picker.lsp_definitions() end, desc = "goto [d]efinition", has = "definition" },
+            { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "goto [r]eferences" },
+            { "gI", function() Snacks.picker.lsp_implementations() end, desc = "goto [I]mplementation" },
+            { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "goto t[y]pe definition" },
+            { "<leader>scd", function() Snacks.picker.lsp_symbols({ filter = HellVim.config.kind_filter }) end, desc = "[d]ocument symbols", has = "documentSymbol" },
+            { "<leader>scw", function() Snacks.picker.lsp_workspace_symbols({ filter = HellVim.config.kind_filter }) end, desc = "[w]orkspace symbols", has = "workspace/symbols" },
+          },
+        },
+      },
+    },
   },
   {
     "folke/which-key.nvim",

@@ -1,26 +1,6 @@
 ---@class hellvim.util.lsp
 local M = {}
 
-function M.hover()
-  local max_width = math.floor(vim.o.columns * 0.5)
-  local max_height = math.floor(vim.o.lines * 0.3)
-
-  local params = vim.lsp.util.make_position_params()
-
-  vim.lsp.buf_request(0, vim.lsp.protocol.Methods.textDocument_hover, params, function(_, result, ctx, config)
-    if result and result.contents then
-      -- Customize floating window options
-      local opts = {
-        border = "rounded",
-        max_width = max_width,
-        max_height = max_height,
-      }
-
-      vim.lsp.handlers.hover(_, result, ctx, opts)
-    end
-  end)
-end
-
 ---@param opts? HellFormatter| {filter?: (string|vim.lsp.get_clients.Filter)}
 function M.formatter(opts)
   opts = opts or {}
@@ -51,59 +31,21 @@ function M.formatter(opts)
   return HellVim.merge(ret, opts) --[[@as HellFormatter]]
 end
 
----@return _.lspconfig.options
-function M.get_config(server)
-  local configs = require("lspconfig.configs")
-  return rawget(configs, server)
-end
-
----@return {default_config:lspconfig.Config}
-function M.get_raw_config(server)
-  local ok, ret = pcall(require, "lspconfig.configs." .. server)
-  if ok then
-    return ret
-  end
-  return require("lspconfig.server_configurations." .. server)
-end
-
-function M.is_enabled(server)
-  local c = M.get_config(server)
-  return c and c.enabled ~= false
-end
-
 ---@alias lsp.Client.format {timeout_ms?: number, format_options?: table} | vim.lsp.get_clients.Filter
 
 ---@param opts? lsp.Client.format
 function M.format(opts)
-  opts = vim.tbl_deep_extend(
-    "force",
-    {},
-    opts or {},
-    HellVim.opts("nvim-lspconfig").format or {},
-    HellVim.opts("conform.nvim").format or {}
-  )
+  opts = vim.tbl_deep_extend("force", {}, opts or {}, HellVim.opts("nvim-lspconfig").format or {})
   local ok, conform = pcall(require, "conform")
   -- use conform for formatting with LSP when available,
   -- since it has better format diffing
   if ok then
-    opts.formatters = {}
+    -- nil so conform fetches options from formatters_by_ft
+    opts.formatters = nil
     conform.format(opts)
   else
     vim.lsp.buf.format(opts)
   end
-end
-
----@param server string
----@param cond fun(root_dir, config): boolean
-function M.disable(server, cond)
-  local util = require("lspconfig.util")
-  local def = M.get_config(server)
-  ---@diagnostic disable-next-line: undefined-field
-  def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root_dir)
-    if cond(root_dir, config) then
-      config.enabled = false
-    end
-  end)
 end
 
 M.action = setmetatable({}, {
@@ -123,9 +65,18 @@ M.action = setmetatable({}, {
 ---@class LspCommand: lsp.ExecuteCommandParams
 ---@field open? boolean
 ---@field handler? lsp.Handler
+---@field filter? string|vim.lsp.get_clients.Filter
+---@field title? string
 
 ---@param opts LspCommand
 function M.execute(opts)
+  local filter = opts.filter or {}
+  filter = type(filter) == "string" and { name = filter } or filter
+  local buf = vim.api.nvim_get_current_buf()
+
+  ---@cast filter vim.lsp.get_clients.Filter
+  local client = vim.lsp.get_clients(HellVim.merge({}, filter, { bufnr = buf }))[1]
+
   local params = {
     command = opts.command,
     arguments = opts.arguments,
@@ -136,23 +87,39 @@ function M.execute(opts)
       params = params,
     })
   else
-    return vim.lsp.buf_request(0, "workspace/executeCommand", params, opts.handler)
+    vim.list_extend(params, { title = opts.title })
+    return client:exec_cmd(params, { bufnr = buf }, opts.handler)
   end
+end
+
+---@param filter? vim.lsp.get_clients.Filter
+function M.code_actions(filter)
+  filter = filter or {}
+  local ret = {} ---@type string[]
+  local clients = vim.lsp.get_clients(filter)
+  for _, client in ipairs(clients) do
+    vim.list_extend(ret, vim.tbl_get(client, "server_capabilities", "codeActionProvider", "codeActionKinds") or {})
+    local regs = client.dynamic_capabilities:get("codeActionProvider", filter)
+    for _, reg in ipairs(regs or {}) do
+      vim.list_extend(ret, vim.tbl_get(reg, "registerOptions", "codeActionKinds") or {})
+    end
+  end
+  return HellVim.dedup(ret)
 end
 
 function M.restart_all()
   HellVim.info("Restarting all LSP servers", { title = "hellvim.lsp" })
-  vim.cmd("LspRestart")
+  vim.cmd("lsp restart")
 end
 
 function M.stop_all()
   HellVim.info("Stopping all LSP servers", { title = "hellvim.lsp" })
-  vim.cmd("LspStop")
+  vim.cmd("lsp disable")
 end
 
 function M.start_all()
   HellVim.info("Starting LSP servers", { title = "hellvim.lsp" })
-  vim.cmd("LspStart")
+  vim.cmd("lsp enable")
 end
 
 return M

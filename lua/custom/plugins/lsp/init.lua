@@ -253,6 +253,7 @@ return {
     "neovim/nvim-lspconfig",
     -- TODO: VeryLazy should not be needed, but without it, initial file open does not work, second file open works.
     event = "VeryLazy",
+    opts_extend = { "servers.*.keys" },
     -- event = "LazyFile",
     -- event = {
     --   "BufReadPost",
@@ -309,42 +310,65 @@ return {
         codelens = {
           enabled = true,
         },
-        -- add any global capabilities here
-        capabilities = {
-          workspace = {
-            fileOperations = {
-              didRename = true,
-              willRename = true,
-              -- PERF: didChangeWatchedFiles is too slow.
-              -- TODO: Remove this when https://github.com/neovim/neovim/issues/23291#issuecomment-1686709265 is fixed.
-              didChangeWatchedFiles = { dynamicRegistration = false },
-            },
-          },
+        -- Enable LSP-based folding (Neovim 0.12+)
+        folds = {
+          enabled = true,
         },
-        -- TODO: This is from LazyVim, probably not needed?
         -- options for vim.lsp.buf.format
-        -- `bufnr` and `filter` is handled by the LazyVim formatter,
-        -- but can be also overridden when specified
         format = {
           formatting_options = nil,
           timeout_ms = nil,
         },
-        ---@type lspconfig.options
+        ---@alias hellvim.lsp.Config vim.lsp.Config|{mason?:boolean, enabled?:boolean, keys?:LazyKeysLspSpec[]}
+        ---@type table<string, hellvim.lsp.Config|boolean>
         servers = {
+          -- global config applied to all servers via vim.lsp.config("*", ...)
+          ["*"] = {
+            capabilities = {
+              workspace = {
+                fileOperations = {
+                  didRename = true,
+                  willRename = true,
+                  didChangeWatchedFiles = { dynamicRegistration = false },
+                },
+              },
+            },
+            -- stylua: ignore
+            keys = {
+              { "<leader>cli", function() Snacks.picker.lsp_config() end, desc = "[i]nfo" },
+              { "<leader>clr", HellVim.lsp.restart_all, desc = "[r]estart" },
+              { "<leader>clt", HellVim.lsp.stop_all, desc = "s[t]op" },
+              { "<leader>cls", HellVim.lsp.start_all, desc = "[s]tart" },
+              { "<leader>cll", function() vim.cmd("lsp log") end, desc = "[l]og" },
+              { "gd", vim.lsp.buf.definition, desc = "goto [D]efinition", has = "definition" },
+              { "gr", vim.lsp.buf.references, desc = "goto [R]eferences", nowait = true },
+              { "gI", vim.lsp.buf.implementation, desc = "goto [I]mplementation" },
+              { "gy", vim.lsp.buf.type_definition, desc = "t[y]pe Definition" },
+              { "gD", vim.lsp.buf.declaration, desc = "goto [D]eclaration" },
+              { "K", function() return vim.lsp.buf.hover() end, desc = "Hover" },
+              { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
+              { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
+              { "<leader>ca", vim.lsp.buf.code_action, desc = "Code [a]ction", mode = { "n", "v" }, has = "codeAction" },
+              { "<leader>cc", vim.lsp.codelens.run, desc = "run [c]odelens", mode = { "n", "v" }, has = "codeLens" },
+              { "<leader>cC", function() vim.lsp.codelens.enable(true, { bufnr = 0 }) end, desc = "refresh & display [C]odelens", mode = { "n" }, has = "codeLens" },
+              { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "[R]ename file", mode = { "n" }, has = { "workspace/didRenameFiles", "workspace/willRenameFiles" } },
+              { "<leader>cr", vim.lsp.buf.rename, desc = "[r]ename", has = "rename" },
+              { "<leader>cA", HellVim.lsp.action.source, desc = "source [A]ction", has = "codeAction" },
+              { "]]", function() Snacks.words.jump(vim.v.count1) end, has = "documentHighlight",
+                desc = "Next Reference", enabled = function() return Snacks.words.is_enabled() end },
+              { "[[", function() Snacks.words.jump(-vim.v.count1) end, has = "documentHighlight",
+                desc = "Prev Reference", enabled = function() return Snacks.words.is_enabled() end },
+              { "<a-n>", function() Snacks.words.jump(vim.v.count1, true) end, has = "documentHighlight",
+                desc = "Next Reference", enabled = function() return Snacks.words.is_enabled() end },
+              { "<a-p>", function() Snacks.words.jump(-vim.v.count1, true) end, has = "documentHighlight",
+                desc = "Prev Reference", enabled = function() return Snacks.words.is_enabled() end },
+            },
+          },
           bashls = {},
         },
-        -- you can do any additional lsp server setup here
-        -- return true if you don't want this server to be setup with lspconfig
-        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
-        setup = { -- NOTE: without this propery on _opts indexing against opts.setup will not work
-          -- example to setup with typescript.nvim
-          -- tsserver = function(_, opts)
-          --   require("typescript").setup({ server = opts })
-          --   return true
-          -- end,
-          -- Specify * to use this function as a fallback for any server
-          -- ["*"] = function(server, opts) end,
-        },
+        -- return true to prevent this server from being configured via vim.lsp.config
+        ---@type table<string, fun(server:string, opts:vim.lsp.Config):boolean?>
+        setup = {},
       }
 
       return _opts
@@ -355,10 +379,20 @@ return {
       -- setup autoformat
       HellVim.format.register(HellVim.lsp.formatter())
 
-      -- setup keymaps on LSP attach (Snacks handles both attach and dynamic capabilities)
-      Snacks.util.lsp.on({}, function(buffer, client)
-        require("custom.plugins.lsp.keymaps").on_attach(client, buffer)
-      end)
+      -- setup keymaps (Snacks.keymap.set handles LSP method checks and buffer attachment)
+      local names = vim.tbl_keys(opts.servers) ---@type string[]
+      table.sort(names)
+      for _, server in ipairs(names) do
+        local server_opts = opts.servers[server]
+        if type(server_opts) == "table" and server_opts.keys then
+          require("custom.plugins.lsp.keymaps").set({ name = server ~= "*" and server or nil }, server_opts.keys)
+        end
+      end
+
+      -- toggle inlay hints
+      if vim.lsp.inlay_hint then
+        Snacks.toggle.inlay_hints():map("<leader>uh")
+      end
 
       -- inlay hints
       if opts.inlay_hints.enabled then
@@ -376,128 +410,91 @@ return {
       -- code lens
       if opts.codelens.enabled and vim.lsp.codelens then
         Snacks.util.lsp.on({ method = "textDocument/codeLens" }, function(buffer)
-          vim.lsp.codelens.refresh()
-          vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-            buffer = buffer,
-            callback = vim.lsp.codelens.refresh,
-          })
+          vim.lsp.codelens.enable(true, { bufnr = buffer })
+        end)
+      end
+
+      -- LSP-based folding
+      if opts.folds.enabled then
+        Snacks.util.lsp.on({ method = "textDocument/foldingRange" }, function()
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
         end)
       end
 
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
-        opts.diagnostics.virtual_text.prefix = vim.fn.has("nvim-0.10.0") == 0 and "●"
-          or function(diagnostic)
-            local icons = HellVim.config.icons.diagnostics
-            for d, icon in pairs(icons) do
-              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-                return icon
-              end
+        opts.diagnostics.virtual_text.prefix = function(diagnostic)
+          local icons = HellVim.config.icons.diagnostics
+          for d, icon in pairs(icons) do
+            if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+              return icon
             end
           end
+          return "●"
+        end
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
-      local servers = opts.servers
+      -- apply global ("*") server config
+      if opts.servers["*"] then
+        vim.lsp.config("*", opts.servers["*"])
+      end
+
+      -- merge completion plugin capabilities into global config
       local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
       local has_blink, blink = pcall(require, "blink.cmp")
-
-      local capabilities = vim.tbl_deep_extend(
-        "force",
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        has_cmp and cmp_nvim_lsp.default_capabilities() or {},
-        has_blink and blink.get_lsp_capabilities() or {},
-        opts.capabilities or {}
-      )
-
-      local function setup(server)
-        local server_opts = vim.tbl_deep_extend("force", {
-          capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {})
-        if server_opts.enabled == false then
-          return
-        end
-
-        if opts.setup[server] then
-          if opts.setup[server](server, server_opts) then
-            return
-          end
-        elseif opts.setup["*"] then
-          if opts.setup["*"](server, server_opts) then
-            return
-          end
-        end
-        require("lspconfig")[server].setup(server_opts)
+      if has_cmp then
+        vim.lsp.config("*", { capabilities = cmp_nvim_lsp.default_capabilities() })
+      end
+      if has_blink then
+        vim.lsp.config("*", { capabilities = blink.get_lsp_capabilities() })
       end
 
       -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
-      -- local all_mslp_servers = {}
-      -- if have_mason then
-      --   all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
-      -- end
+      local have_mason = HellVim.has("mason-lspconfig.nvim")
+      local mason_all = have_mason
+          and vim.tbl_keys(require("mason-lspconfig.mappings").get_mason_map().lspconfig_to_package)
+        or {} --[[@as string[] ]]
+      local mason_exclude = {} ---@type string[]
 
-      local ensure_installed = {} ---@type string[]
-      for server, server_opts in pairs(servers) do
-        if server_opts then
-          server_opts = server_opts == true and {} or server_opts
-          if server_opts.enabled ~= false then
-            -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-            -- if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-            if server_opts.mason == false then
-              setup(server)
-            else
-              ensure_installed[#ensure_installed + 1] = server
-            end
+      ---@return boolean? exclude from automatic mason setup
+      local function configure(server)
+        if server == "*" then
+          return false
+        end
+        local sopts = opts.servers[server]
+        sopts = sopts == true and {} or (not sopts) and { enabled = false } or sopts --[[@as hellvim.lsp.Config]]
+
+        if sopts.enabled == false then
+          mason_exclude[#mason_exclude + 1] = server
+          return
+        end
+
+        local use_mason = sopts.mason ~= false and vim.tbl_contains(mason_all, server)
+        local setup = opts.setup[server] or opts.setup["*"]
+        if setup and setup(server, sopts) then
+          mason_exclude[#mason_exclude + 1] = server
+        else
+          vim.lsp.config(server, sopts)
+          if not use_mason then
+            vim.lsp.enable(server)
           end
         end
+        return use_mason
       end
 
+      local install = vim.tbl_filter(configure, vim.tbl_keys(opts.servers))
       if have_mason then
-        vim.tbl_deep_extend(
-          "force",
-          ensure_installed,
-          HellVim.opts("mason.nvim").ensure_installed or {},
-          HellVim.opts("mason-lspconfig.nvim").ensure_installed or {}
-        )
-        -- if have_mason_tool_installer then
-        --TODO: if i install with tool installer instead of mason,
-        --it does not install the stuff from the merged ensure_installed in the
-        --mason-tool-installer module declaration
-        --   mason_tool_installer.setup({ ensure_installed = ensure_installed })
-        -- end
-        -- vim.notify('Installing LSP servers: ' .. table.concat(ensure_installed, ', '), 'info')
-        mlsp.setup({
-          ensure_installed = ensure_installed or {},
-          automatic_enable = true,
-          -- ensure_installed = have_mason_tool_installer and {} or ensure_installed,
-          handlers = { setup },
+        require("mason-lspconfig").setup({
+          ensure_installed = vim.list_extend(install, HellVim.opts("mason-lspconfig.nvim").ensure_installed or {}),
+          automatic_enable = { exclude = mason_exclude },
         })
-      end
-
-      if HellVim.lsp.is_enabled("denols") and HellVim.lsp.is_enabled("vtsls") then
-        local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        HellVim.lsp.disable("vtsls", is_deno)
-        HellVim.lsp.disable("denols", function(root_dir, config)
-          if not is_deno(root_dir) then
-            config.settings.deno.enable = false
-          end
-          return false
-        end)
       end
     end,
   },
   {
-    ---@module 'mason-tool-installer'
     "WhoIsSethDaniel/mason-tool-installer.nvim",
-    -- cmd = {
-    --   'MasonToolsInstall',
-    --   'MasonToolsInstallSync',
-    --   'MasonToolsUpdate',
-    --   'MasonToolsUpdateSync',
-    --   'MasonToolsClean',
-    -- },
     dependencies = { "mason-org/mason.nvim" },
     opts_extend = { "ensure_installed" },
     opts = {
@@ -526,7 +523,7 @@ return {
           --   vim.log.levels.INFO,
           --   { title = "MasonToolInstaller" }
           -- )
-          -- vim.notify('Starting Mason tool installation', vim.log.levels.INFO)
+          -- vim.notify("Starting Mason tool installation", vim.log.levels.INFO)
         end,
       })
 
@@ -594,10 +591,10 @@ return {
     cmd = "Mason",
     keys = { { "<leader>pm", "<cmd>Mason<cr>", desc = "Mason" } },
     build = ":MasonUpdate",
-    -- dependencies = {
-    --   'mason-org/mason-lspconfig.nvim',
-    --   'WhoIsSethDaniel/mason-tool-installer.nvim',
-    -- },
+    dependencies = {
+      --   'mason-org/mason-lspconfig.nvim',
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
     opts_extend = { "ensure_installed", "registries" },
     ---@module 'mason'
     ---@type MasonSettings
