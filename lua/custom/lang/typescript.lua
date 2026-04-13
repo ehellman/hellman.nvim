@@ -5,7 +5,7 @@ return {
     opts = {
       ensure_installed = {
         -- "ts_ls",
-        "vtsls",
+        -- "vtsls",
         "prettier",
         "prettierd",
       },
@@ -45,20 +45,12 @@ return {
           includeInlayParameterNameHintsWhenArgumentMatchesName = true,
           includeInlayPropertyDeclarationTypeHints = true,
           includeInlayVariableTypeHints = false,
+          -- importModuleSpecifierPreference = "non-relative",
         },
       },
     },
     config = function(_, opts)
-      require("typescript-tools").setup(vim.tbl_deep_extend("force", opts, {
-        on_attach = function(client, bufnr)
-          -- HellVim.lsp.on_attach(client, bufnr)
-          require("custom.plugins.lsp.keymaps").on_attach(client, bufnr)
-          -- add custom commands
-          -- client.commands["_typescript.moveToFileRefactoring"] = function(command, ctx)
-          --   require("typescript-tools").refactor.move_to_file(command, ctx)
-          -- end
-        end,
-      }))
+      require("typescript-tools").setup(opts)
     end,
   },
   -- {
