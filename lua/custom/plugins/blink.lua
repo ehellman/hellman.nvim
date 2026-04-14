@@ -58,7 +58,8 @@ return {
             -- https://cmp.saghen.dev/configuration/completion.html#available-components
             columns = {
               { "kind_icon", gap = 1 },
-              { "label", gap = 1, "kind" },
+              { "label", gap = 1 },
+              { "kind" },
             },
           },
         },
