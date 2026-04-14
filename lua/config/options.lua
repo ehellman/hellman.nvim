@@ -59,10 +59,11 @@ opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- [[ Scrolling and View Options ]]
-opt.scrolloff = 20 -- Keep 10 lines visible above/below cursor
+opt.scrolloff = 20 -- Keep 20 lines visible above/below cursor
 opt.sidescrolloff = 8 -- Keep 8 columns visible left/right of cursor
 opt.splitright = true -- Open vertical splits to the right
 opt.splitbelow = true -- Open horizontal splits below
+opt.splitkeep = "screen" -- Keep view stable when opening/closing splits
 opt.virtualedit = "block" -- Allow cursor movement in block selection where there's no text
 
 -- [[ Indentation and Formatting ]]
@@ -72,7 +73,6 @@ vim.o.shiftwidth = 2 -- Size of indent
 vim.o.smartindent = true -- Smart autoindenting
 vim.o.tabstop = 2 -- Number of spaces tabs count for
 vim.o.softtabstop = 2 -- Number of spaces for soft tabs
-opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 -- opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
 opt.formatoptions = "jcroqlnt" -- Format options (see :help fo-table)
